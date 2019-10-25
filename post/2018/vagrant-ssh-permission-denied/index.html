@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>解决 Vagrant ssh 失败的问题 | zi-blog</title>
+    <meta property="og:title" content="解决 Vagrant ssh 失败的问题 - zi-blog">
+    <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
+    <meta name="description" content="解决 Vagrant ssh 失败的问题">
+    
+    <meta name="author" content="zi">
+    <meta property="og:url" content="https://z4none.me/post/2018/vagrant-ssh-permission-denied/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+        
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://z4none.me">首页</a>
+                    
+                    <a  href="https://z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">解决 Vagrant ssh 失败的问题</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2018年7月9日
+                        </date>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">| <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            <h1 id="环境">环境</h1>
+
+<ul>
+<li>Windows 10</li>
+<li>Vagrant 2.1.1</li>
+<li>OpenSSH_for_Windows_7.6p1, LibreSSL 2.6.4</li>
+</ul>
+
+<h1 id="现象">现象</h1>
+
+<p>虚拟机启动后运行 <code>vagrant ssh</code> 出错, 相关错误信息如下 <code>vagrant ssh - --v</code>:</p>
+
+<pre><code>debug1: Trying private key: D:/Docker/.vagrant/machines/default/virtualbox/private_key
+debug3: Bad permissions. Try removing permissions for user: S-1-5-11 on file D:/Docker/.vagrant/machines/default/virtualbox/private_key.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions for 'D:/Docker/.vagrant/machines/default/virtualbox/private_key' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key &quot;D:/Docker/.vagrant/machines/default/virtualbox/private_key&quot;: bad permissions
+debug2: we did not send a packet, disable method
+debug1: No more authentication methods to try.
+vagrant@127.0.0.1: Permission denied (publickey).
+</code></pre>
+
+<p>issue: <a href="https://github.com/hashicorp/vagrant/issues/9433">https://github.com/hashicorp/vagrant/issues/9433</a></p>
+
+<h1 id="问题分析">问题分析</h1>
+
+<p>openssh 客户端连接虚拟机时对 private_key 文件权限进行检查发现它可被其他用户访问</p>
+
+<h1 id="解决方法">解决方法</h1>
+
+<p>在 private_key 文件的属性 / 安全中设置所有者为当前用户并取消所有继承, 当前用户完全控制</p>
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2018/vagrant-ssh-permission-denied/">https://z4none.me/post/2018/vagrant-ssh-permission-denied/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2018/endian-and-bit-field/">字序对 bit field 的影响</a></li>
+        
+        <li><a href="/post/2018/build-eXosip-in-vs2017/">在 VC 2018 下编译 eXosip</a></li>
+        
+        <li><a href="/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/">windows py 2.7 下安装 nnpy 的过程</a></li>
+        
+        <li><a href="/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">在 VC 2015 下编译 Live555</a></li>
+        
+        <li><a href="/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/">NW.js 中 Nodejs 模块开发</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "z4none/z4none.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555">在 VC 2015 下编译 Live555</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="NW.js 中 Nodejs 模块开发">NW.js 中 Nodejs 模块开发</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/" title="Ionic 填坑">Ionic 填坑</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	    
+	    <p>
+	    	&copy; 2019 <a href="https://z4none.me">zi-blog By zi</a>.
+	    </p>
+	    <p id="busuanzi_container_site_uv">
+		  	Visited: <span id="busuanzi_value_site_uv"></span>
+		</p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.        
+        </p>        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-111542948-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

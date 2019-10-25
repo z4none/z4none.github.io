@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>字序对 bit field 的影响 | zi-blog</title>
+    <meta property="og:title" content="字序对 bit field 的影响 - zi-blog">
+    <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
+    <meta name="description" content="字序对 bit field 的影响">
+    
+    <meta name="author" content="zi">
+    <meta property="og:url" content="https://z4none.me/post/2018/endian-and-bit-field/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+        
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://z4none.me">首页</a>
+                    
+                    <a  href="https://z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">字序对 bit field 的影响</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2018年4月10日
+                        </date>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">| <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h1 id="问题">问题</h1>
+
+<p>下面是在进行 H264 数据分析时碰到的问题</p>
+
+<p>H264 nal indecator 是在 00 00 00 01 后面的一字节，其字段内容为：
+* forbidden_zero_bit(1)
+* nal_ref_idc(2)
+* nal_unit_type(5)</p>
+
+<p>比如对 0x67 / 0b01100111，各字段为：
+* forbidden_zero_bit = 0
+* nal_ref_idc = 0b11 = 3
+* nal_unit_type = 0b111 = 7</p>
+
+<p>常规的提取方式如下：</p>
+
+<pre><code>uint8_t a = 0x67;
+uint8_t f    = (a &amp; 0b10000000) &gt;&gt; 7;
+uint8_t nri  = (a &amp; 0b01100000) &gt;&gt; 5;
+uint8_t type = (a &amp; 0b00011111);
+</code></pre>
+
+<p>f = 0, nri = 3, type = 7
+结果没有问题。</p>
+
+<p>但是如果采用 bit field 进行数据拆解则获取不到正确的结果：</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;inttypes.h&gt;
+
+struct NalIndicator {
+    uint8_t f : 1;
+    uint8_t nri : 2;
+    uint8_t type : 5;
+};
+
+int main()
+{
+    NalIndicator * n;
+
+    uint8_t a = 0x67;
+    n = (NalIndicator *)(&amp;a);
+
+    uint8_t f    = (a &amp; 0b10000000) &gt;&gt; 7;
+    uint8_t nri  = (a &amp; 0b01100000) &gt;&gt; 5;
+    uint8_t type = (a &amp; 0b00011111);
+
+    printf(&quot;sizeof NalIndicator %d\n&quot;, sizeof(NalIndicator));
+    printf(&quot;f    : %d, %d\n&quot;, n-&gt;f, f);
+    printf(&quot;nri  : %d, %d\n&quot;, n-&gt;nri, nri);
+    printf(&quot;type : %d, %d\n&quot;, n-&gt;type, type);
+
+    return 0;
+}
+</code></pre>
+
+<p>输出
+&gt; sizeof NalIndicator 1
+f    : 1, 0
+nri  : 3, 3
+type : 12, 7
+请按任意键继续&hellip;</p>
+
+<h1 id="分析">分析</h1>
+
+<p>经过分析，发现是字序影响到了 bit field 的顺序而导致的。</p>
+
+<p>按照以上代码的定义，实际上的各字段是按照从右往左排列的，也就是说：</p>
+
+<pre><code>0x67 = 01100111 = 01100，11，1
+</code></pre>
+
+<p>其中 f = 1， nri = 0b11 = 3, type = 0b0110 = 12。</p>
+
+<p>没想到字序除了会决定字节的顺序，还会对 bit field 的顺序造成影响。</p>
+
+<h1 id="解决方式">解决方式</h1>
+
+<p>如果要编写跨平台的代码，需要针对不同字序的平台定义不同的 struct，并通过预处理器进行定义的切换，用户需要定义类似 BIG_ENDIAN / LITTLE_ENDIAN 的宏，比如 SDL 的 SDL_endian.h</p>
+
+<pre><code>/**
+ *  \name The two types of endianness
+ */
+/* @{ */
+#define SDL_LIL_ENDIAN  1234
+#define SDL_BIG_ENDIAN  4321
+/* @} */
+
+#ifndef SDL_BYTEORDER           /* Not defined in SDL_config.h? */
+#ifdef __linux__
+#include &lt;endian.h&gt;
+#define SDL_BYTEORDER  __BYTE_ORDER
+#else /* __linux__ */
+#if defined(__hppa__) || \
+    defined(__m68k__) || defined(mc68000) || defined(_M_M68K) || \
+    (defined(__MIPS__) &amp;&amp; defined(__MISPEB__)) || \
+    defined(__ppc__) || defined(__POWERPC__) || defined(_M_PPC) || \
+    defined(__sparc__)
+#define SDL_BYTEORDER   SDL_BIG_ENDIAN
+#else
+#define SDL_BYTEORDER   SDL_LIL_ENDIAN
+#endif
+#endif /* __linux__ */
+#endif /* !SDL_BYTEORDER */
+</code></pre>
+
+<p>想要在编译阶段自动检测字序是不可能的，无论什么方式都需要在程序执行阶段才能对字序及进行判断</p>
+
+<pre><code>#include &lt;stdint .h&gt;
+#define IS_BIG_ENDIAN (*(uint16_t *)&quot;\0\xff&quot; &lt; 0x100)
+</code></pre>
+
+<p>不过我们可以针对用户通过宏定义的字序进行检查，并在运行时抛出异常：</p>
+
+<pre><code>inline int IsBigEndian()
+{
+    int i=1;
+    return ! *((char *)&amp;i);
+}
+
+/* ... */
+
+#ifdef BIG_ENDIAN
+assert(IsBigEndian());
+#elif LITTLE_ENDIAN
+assert(!IsBigEndian());
+#else
+#error &quot;No endianness macro defined&quot;
+#endif
+</code></pre>
+
+<p>还是乖乖用位运算吧</p>
+
+<p>参考资料
+&gt; <a href="http://mjfrazer.org/mjfrazer/bitfields/">http://mjfrazer.org/mjfrazer/bitfields/</a>
+&gt; <a href="https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/">https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/</a></p>
+
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2018/endian-and-bit-field/">https://z4none.me/post/2018/endian-and-bit-field/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2018/build-eXosip-in-vs2017/">在 VC 2018 下编译 eXosip</a></li>
+        
+        <li><a href="/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/">windows py 2.7 下安装 nnpy 的过程</a></li>
+        
+        <li><a href="/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">在 VC 2015 下编译 Live555</a></li>
+        
+        <li><a href="/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/">NW.js 中 Nodejs 模块开发</a></li>
+        
+        <li><a href="/post/2016/Ionic-%E5%A1%AB%E5%9D%91/">Ionic 填坑</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "z4none/z4none.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555">在 VC 2015 下编译 Live555</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="NW.js 中 Nodejs 模块开发">NW.js 中 Nodejs 模块开发</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/" title="Ionic 填坑">Ionic 填坑</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	    
+	    <p>
+	    	&copy; 2019 <a href="https://z4none.me">zi-blog By zi</a>.
+	    </p>
+	    <p id="busuanzi_container_site_uv">
+		  	Visited: <span id="busuanzi_value_site_uv"></span>
+		</p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.        
+        </p>        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-111542948-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

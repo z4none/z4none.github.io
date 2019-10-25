@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Python 中使用 libmp3lame 进行 mp3 编解码 | zi-blog</title>
+    <meta property="og:title" content="Python 中使用 libmp3lame 进行 mp3 编解码 - zi-blog">
+    <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
+    <meta name="description" content="Python 中使用 libmp3lame 进行 mp3 编解码">
+    
+    <meta name="author" content="zi">
+    <meta property="og:url" content="https://z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+        
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://z4none.me">首页</a>
+                    
+                    <a  href="https://z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">Python 中使用 libmp3lame 进行 mp3 编解码</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2014年7月9日
+                        </date>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">| <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            <p>最近在研究 Python 的 mp3 编解码，
+可能是 mp3 格式专利问题，这方面可用并且还在维护的 Python 库没发现几个
+试了一下 pymedia 倒是可以，但是它官方支持的版本只到 Python 2.4
+找了个第三方的 for Python 2.7 版本的， 发现它在 windows 下的实现中输出缓冲区大小写死成 10000 字节，导致解码的实时性差，
+努力想把官方工程修改后迁移到 2.7 版本，最后还是放弃了&hellip;
+也尝试直接用 Lame.exe 用管道收发数据，但是 Windows  下 Python 2.X 貌似不支持管道的异步读写，最后也放弃了
+好在我只用考虑 windows 平台，最后通过 ctype 调用 libmp3lame.dll 中的方法实现了我要的功能
+代码很简单，只考虑了我需要的音频格式</p>
+
+<pre><code class="language-Python">#coding:utf-8
+
+import time
+import ctypes
+
+class LameEncoder():
+    def __init__(self, sample_rate, channel_count, bit_rate):
+        self.dll  = ctypes.CDLL(&quot;libmp3lame.dll&quot;)
+        self.lame = self.dll.lame_init()
+        self.dll.lame_set_in_samplerate(self.lame, sample_rate);
+        self.dll.lame_set_num_channels(self.lame, channel_count);
+        self.dll.lame_set_brate(self.lame, bit_rate);
+        self.dll.lame_set_quality(self.lame, 3);
+        self.dll.lame_init_params(self.lame);
+
+    def encode(self, pcm_data):
+        sample_count    = len(pcm_data) /2
+        output_buff_len = int(1.25 * sample_count + 7200)
+        output_buff     = ctypes.create_string_buffer(output_buff_len)
+        output_size     = self.dll.lame_encode_buffer(self.lame, ctypes.create_string_buffer(pcm_data), 0, sample_count, output_buff, output_buff_len);
+        return output_buff.raw[:output_size]
+
+class LameDecoder():
+    def __init__(self, sample_rate, channel_count, bit_rate):
+        self.dll  = ctypes.CDLL(&quot;libmp3lame.dll&quot;)
+        self.lame = self.dll.lame_init()
+        self.hip  = self.dll.hip_decode_init()
+        self.dll.lame_set_in_samplerate(self.lame, sample_rate)
+        self.dll.lame_set_num_channels(self.lame, channel_count)
+        self.dll.lame_set_brate(self.lame, bit_rate)
+        self.dll.lame_set_mode(self.lame, 3)
+        self.dll.lame_set_quality(self.lame, 3)
+        self.dll.lame_init_params(self.lame)
+        self.dll.lame_get_framesize(self.lame)
+
+    def decode(self, mp3_data):
+        output_buff_len =  self.dll.lame_get_framesize(self.lame) * 2
+        output_buff     = ctypes.create_string_buffer(output_buff_len)
+        output_size     = self.dll.hip_decode1(self.hip, ctypes.create_string_buffer(mp3_data), len(mp3_data), output_buff, 0);
+        return output_buff.raw[:output_size * 2]
+        
+    def flush(self):
+        output_buff_len =  self.dll.lame_get_framesize(self.lame) * 2
+        output_buff     = ctypes.create_string_buffer(output_buff_len)
+        output_size     = self.dll.hip_decode1(self.hip, ctypes.create_string_buffer(&quot;&quot;), 0, output_buff, 0);
+        return output_buff.raw[:output_size * 2]
+
+if __name__ == &quot;__main__&quot;:
+    def test_enc():
+        print &quot;test encode ...&quot;
+        lame = LameEncoder(8000, 1, 8)
+        input_file  = open(&quot;1.pcm&quot;, &quot;rb&quot;)
+        output_file = open(&quot;1.mp3&quot;, &quot;wb+&quot;)
+        while 1: 
+            data = input_file.read(256)
+            if data:
+                output = lame.encode(data)
+                output_file.write(output)
+            else:
+                break
+        input_file.close()
+        output_file.close()
+        print &quot;test encode done&quot;
+        
+    def test_dec():
+        print &quot;test decode ...&quot;
+        lame = LameDecoder(8000, 1, 8)
+        input_file  = open(&quot;1.mp3&quot;, &quot;rb&quot;)
+        output_file = open(&quot;2.pcm&quot;, &quot;wb+&quot;)
+        while 1: 
+            data = input_file.read(512)
+            if data:
+                output = lame.decode(data)
+                if output:
+                    output_file.write(output)
+                    while 1:
+                        output = lame.flush()
+                        if output:
+                            output_file.write(output)
+                        else:
+                            break
+            else:
+                break
+        input_file.close()
+        output_file.close()
+        print &quot;test decode done&quot;
+        
+    test_enc()
+    test_dec()
+</code></pre>
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/">https://z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2014/python-list-%E5%88%86%E9%A1%B5/">Python list 分页</a></li>
+        
+        <li><a href="/post/2014/Python-%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88-2048/">Python 控制台版 2048</a></li>
+        
+        <li><a href="/post/2013/Windows-%E4%B8%8B-SQLite3-shell-%E4%BD%BF%E7%94%A8.sqliterc/">Windows 下 SQLite3 shell 使用.sqliterc</a></li>
+        
+        <li><a href="/post/2013/%E5%9C%A8-Python-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8-print/">在 Python 多线程中使用 print</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "z4none/z4none.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555">在 VC 2015 下编译 Live555</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="NW.js 中 Nodejs 模块开发">NW.js 中 Nodejs 模块开发</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/" title="Ionic 填坑">Ionic 填坑</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	    
+	    <p>
+	    	&copy; 2019 <a href="https://z4none.me">zi-blog By zi</a>.
+	    </p>
+	    <p id="busuanzi_container_site_uv">
+		  	Visited: <span id="busuanzi_value_site_uv"></span>
+		</p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.        
+        </p>        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-111542948-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

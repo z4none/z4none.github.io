@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>在 VC 2018 下编译 eXosip | zi-blog</title>
+    <meta property="og:title" content="在 VC 2018 下编译 eXosip - zi-blog">
+    <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
+    <meta name="description" content="在 VC 2018 下编译 eXosip">
+    
+    <meta name="author" content="zi">
+    <meta property="og:url" content="https://z4none.me/post/2018/build-eXosip-in-vs2017/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+        
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://z4none.me">首页</a>
+                    
+                    <a  href="https://z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">在 VC 2018 下编译 eXosip</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2018年1月15日
+                        </date>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">| <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            <p>eXosip 是 osip 的一个封装，代码简洁易于使用，支持的平台广泛，但编译起来难以一次成功，下面记录一下我今天在 VC2017 环境下的编译过程</p>
+
+<p>从 <a href="http://www.antisip.com/download/exosip2/">http://www.antisip.com/download/exosip2/</a> 下载 osip 和 exosip
+本文用的版本是 5.0，分别为 libexosip2-5.0.0.tar.gz 和 libosip2-5.0.0.tar.gz</p>
+
+<p>还需从 <a href="http://c-ares.haxx.se/">http://c-ares.haxx.se/</a> 下载  c-ares-1.13.0.tar.gz</p>
+
+<p>将下载的压缩包解压到各自文件夹，并重命名为：
+* c-ares
+* exosip
+* osip</p>
+
+<p>其中 exosip 中缺少一个 eXrefer_api.c 文件，从 <a href="https://github.com/aurelihein/exosip/blob/master/src/eXrefer_api.c">https://github.com/aurelihein/exosip/blob/master/src/eXrefer_api.c</a> 下载到对应路径中</p>
+
+<p>打开 \exosip\platform\vsnet 中的 eXosip.sln，可以加载 4 个工程，这里需要选择 Windows SDK 版本 8.1（如果选择升级到 Windows SDK 10 编译时会出现 winnt.h 的 LINE 18017 错误，貌似是 VS 的 BUG？）</p>
+
+<p>工程成功加载后直接编译会出现很多错误，可按以下方法解决：</p>
+
+<h2 id="osipparser2">osipparser2</h2>
+
+<ul>
+<li>snprintf 重定义，注释 internal.h 的 58 行</li>
+
+<li><p>WINAPI_FAMILY_ONE_PARTITION宏定义错误，在 61 行之后添加：</p>
+
+<pre><code>#define WINAPI_FAMILY_ONE_PARTITION(PartitionSet, Partition) ((WINAPI_FAMILY &amp; PartitionSet) == Partition)
+</code></pre></li>
+</ul>
+
+<h2 id="osip2">osip2</h2>
+
+<ul>
+<li>同 osipparser2</li>
+<li>timespec 重定义，预处理宏添加 HAVE_STRUCT_TIMESPEC</li>
+</ul>
+
+<h2 id="c-ares">c-ares</h2>
+
+<p>编译没错误，但是需要在项目中添加文件：
+- ares_create_query.c
+- ares_platform.h
+- ares_platform.c</p>
+
+<p>否则在使用时会报链接错误：
+error LNK2019: ares_getplatform，该符号在函数_get_DNS_Registry中被引用</p>
+
+<h2 id="exosip">eXosip</h2>
+
+<ul>
+<li>snprintf 重定义，注释 eXosip2.h 的 73 行</li>
+<li>OPENSSL 相关错误，安装 OPENSSL 或者去除预处理宏 HAVE_OPENSSL_SSL_H、TSC_SUPPORT</li>
+</ul>
+
+<hr />
+
+<p>编译成功后在项目中使用，需要增加以下 lib</p>
+
+<pre><code class="language-c++">#pragma comment(lib, &quot;Ws2_32.lib&quot;)
+#pragma comment(lib, &quot;Qwave.lib&quot;)
+#pragma comment(lib, &quot;delayimp.lib&quot;)
+#pragma comment(lib, &quot;Dnsapi.lib&quot;)
+#pragma comment(lib, &quot;eXosip.lib&quot;)
+#pragma comment(lib, &quot;libcares.lib&quot;)
+#pragma comment(lib, &quot;osip2.lib&quot;)
+#pragma comment(lib, &quot;osipparser2.lib&quot;)
+</code></pre>
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2018/build-eXosip-in-vs2017/">https://z4none.me/post/2018/build-eXosip-in-vs2017/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/">windows py 2.7 下安装 nnpy 的过程</a></li>
+        
+        <li><a href="/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">在 VC 2015 下编译 Live555</a></li>
+        
+        <li><a href="/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/">NW.js 中 Nodejs 模块开发</a></li>
+        
+        <li><a href="/post/2016/Ionic-%E5%A1%AB%E5%9D%91/">Ionic 填坑</a></li>
+        
+        <li><a href="/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/">取消 Windows 10 自动睡眠</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "z4none/z4none.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555">在 VC 2015 下编译 Live555</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="NW.js 中 Nodejs 模块开发">NW.js 中 Nodejs 模块开发</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/" title="Ionic 填坑">Ionic 填坑</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	    
+	    <p>
+	    	&copy; 2019 <a href="https://z4none.me">zi-blog By zi</a>.
+	    </p>
+	    <p id="busuanzi_container_site_uv">
+		  	Visited: <span id="busuanzi_value_site_uv"></span>
+		</p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.        
+        </p>        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-111542948-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

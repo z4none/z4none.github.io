@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NW.js 中 Nodejs 模块开发 | zi-blog</title>
+    <meta property="og:title" content="NW.js 中 Nodejs 模块开发 - zi-blog">
+    <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
+    <meta name="description" content="NW.js 中 Nodejs 模块开发">
+    
+    <meta name="author" content="zi">
+    <meta property="og:url" content="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+        
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://z4none.me">首页</a>
+                    
+                    <a  href="https://z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">NW.js 中 Nodejs 模块开发</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2017年5月26日
+                        </date>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">| <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            <p>NW.js 是一个基于 Nodejs 和 Chromium 的框架, 可以用 HTML5 和 Javascript 方便的开发桌面应用, 其中 Javascript 中也能使用 Nodejs 的模块, 包括第三方的 C++ 模块.</p>
+
+<p>本文简要记录 NW.js 中 Node 模块开发过程, 其实整个过程和 Nodejs 模块开发类似, 不过需要用 nw-gyp 进行工程的编译.</p>
+
+<h1 id="准备工作">准备工作</h1>
+
+<h2 id="安装-nodejs">安装 NodeJS</h2>
+
+<p>选择 LTS 版本
+<a href="https://nodejs.org/dist/v6.10.2/node-v6.10.2-x64.msi">https://nodejs.org/dist/v6.10.2/node-v6.10.2-x64.msi</a></p>
+
+<p>配置 cnpm</p>
+
+<pre><code>install -g cnpm -- registry=https://registry.npm.taobao.org
+</code></pre>
+
+<h2 id="下载-nwjs">下载 nwjs</h2>
+
+<p>选择 LTS 版本，可支持 Windows XP
+<a href="https://dl.nwjs.io/v0.14.7">https://dl.nwjs.io/v0.14.7</a>
+下载 SDK 版 <a href="https://dl.nwjs.io/v0.14.7/nwjs-sdk-v0.14.7-win-ia32.zip">https://dl.nwjs.io/v0.14.7/nwjs-sdk-v0.14.7-win-ia32.zip</a>
+SDK 版本与 Release 版本的区别：
+- SDK 版本有 DevTools 的支持</p>
+
+<h2 id="安装编译环境">安装编译环境</h2>
+
+<pre><code>cnpm install --global --production windows-build-tools
+</code></pre>
+
+<p>这条命令会下载安装 Python 2.7 和 Visual C++ Build Tool
+也可手动安装 Python 2.7 和 visualcppbuildtools_full.exe</p>
+
+<h2 id="安装-nw-gyp">安装 nw-gyp</h2>
+
+<p>cpm install -g nw-gyp</p>
+
+<h1 id="开发">开发</h1>
+
+<h2 id="创建工程">创建工程</h2>
+
+<p>先创建项目目录, 比如 hello
+创建 <code>binding.gyp</code> 文件,此文件定义了 gyp 生成工程的各参数, 内容如下</p>
+
+<pre><code>{
+  'targets': [
+    {
+      'target_name': 'hello',
+      'sources': [
+        'src/hello.cc'
+      ],
+      'dependencies': [
+      ]
+    }
+  ]
+}
+</code></pre>
+
+<p>然后创建 <code>src\hello.cc</code>:</p>
+
+<pre><code>#include &lt;node.h&gt;
+#include &lt;v8.h&gt;
+
+void Method(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args) {
+  v8::Isolate* isolate = args.GetIsolate();
+  v8::HandleScope scope(isolate);
+  args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, &quot;bar&quot;));
+}
+
+void init(v8::Local&lt;v8::Object&gt; exports) {
+  NODE_SET_METHOD(exports, &quot;foo&quot;, Method);
+}
+
+NODE_MODULE(binding, init)
+</code></pre>
+
+<p>以上代码定义了 hello 模块中的 foo 方法, 起返回值为 &ldquo;bar&rdquo;</p>
+
+<p>运行以下命令创建工程, 工程文件将创建在 build 文件夹中</p>
+
+<pre><code>nw-gyp configure --target=0.14.7 --arch=ia32
+</code></pre>
+
+<p>其中 target 为 nwjs 的版本, 运行 nw.exe 可以看到
+arch 为要编译的目标平台</p>
+
+<h2 id="编译">编译</h2>
+
+<p>运行以下命令编译工程</p>
+
+<pre><code>nw-gyp build --target=0.14.7 --arch=ia32
+</code></pre>
+
+<p>如果编译成功,则会在 build/release 中生成 hello.node, 将此文件复制到 nwjs 项目的 app\node_modules\ 中, 可以 js 文件中调用:</p>
+
+<pre><code>var hello = require(&quot;nello&quot;);
+hello.foo();
+</code></pre>
+
+<p>为了避免每次编译后都手动复制的麻烦, 可以将复制操作编写在 <code>binding.gyp</code> 中</p>
+
+<pre><code>{
+  'targets': [
+    {
+      'target_name': 'hello',
+      'sources': [
+        'src/hello.cc'
+      ],
+      'dependencies': [
+      ]
+    },
+    ,
+    {
+      &quot;target_name&quot;: &quot;copy_binary&quot;,
+      &quot;dependencies&quot;: [&quot;hello&quot;],
+      &quot;type&quot;: &quot;none&quot;,
+      &quot;copies&quot;: [
+        {
+          &quot;destination&quot;: &quot;../nwjs-sdk/app/node_modules/&quot;,
+          &quot;files&quot;: [
+            &quot;./build/Release/hello.node&quot;
+          ]
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+
+<p>这样在每次 build 之后可以自动将最新的 .node 文件复制到 nwjs 项目中</p>
+
+<h2 id="回调函数">回调函数</h2>
+
+<p>刚才我们的示例代码中定义的 foo 函数是同步的, 调用后直接返回了执行结果.</p>
+
+<p>实际的应用中很多场合需要在 Node 模块中实现异步操作, javascript 通过回调函数的方式获取操作结果</p>
+
+<p>以下是在 Node 模块中实现异步操作的简单示例:</p>
+
+<pre><code>#include &lt;node.h&gt;
+#include &lt;v8.h&gt;
+#include &lt;uv.h&gt;
+
+//
+struct CRequestHello
+{
+  Persistent&lt;Function&gt; callback;
+};
+
+//
+void HelloThread(uv_work_t * req)
+{
+  CRequestHello * request = (CRequestHello *)(req-&gt;data);
+  Sleep(1000 * 10);
+}
+
+//
+void EnrollDone(uv_work_t* req, int status)
+{
+  Isolate * isolate = Isolate::GetCurrent();
+  v8::HandleScope handleScope(isolate);
+
+  const unsigned argc = 1;
+  Local&lt;Object&gt; argv_0 = Object::New(isolate);
+  Local&lt;Value&gt; argv[argc] = { argv_0 };
+
+  CRequestHello * request_data = (CRequestHello *)(req-&gt;data);
+
+  Local&lt;Function&gt;::New(isolate, request_data-&gt;callback)-&gt;
+        Call(isolate-&gt;GetCurrentContext()-&gt;Global(), argc, argv);
+}
+
+//
+void MethodHello(const FunctionCallbackInfo&lt;Value&gt;&amp; args)
+{
+  Isolate * isolate = Isolate::GetCurrent();
+
+  if(!args[0]-&gt;IsFunction())
+  {
+    isolate-&gt;ThrowException(
+        String::NewFromUtf8(isolate, &quot;argument must be a function&quot;)
+    );
+    return;
+  }
+
+  Local&lt;Function&gt; callback = Local&lt;Function&gt;::Cast(args[0]);
+  CRequestHello * request = new CRequestHello;
+  request-&gt;callback = callback;
+  uv_work_t * work = new uv_work_t();
+  work-&gt;data = request;
+
+  uv_queue_work(uv_default_loop(), work, HelloThread, HelloDone);
+  args.GetReturnValue().Set(Undefined(isolate));
+}
+
+//
+void init(Local&lt;Object&gt; exports) {
+  NODE_SET_METHOD(exports, &quot;hello&quot;, MethodHello);
+}
+
+//
+NODE_MODULE(binding, init)
+</code></pre>
+
+<p>其核心思路是通过 uv_queue_work 创建一个线程来执行耗时的操作 HelloThread, 当线程执行结束后在主线程中执行同步方法 HelloDone, 这时通过回调函数将操作结果返回到 Javascript.</p>
+
+<p>有时我们还希望在一个耗时操作过程中能通过回调函数多次获取操作的执行过程, 比如文件下载进度, 在 Node 模块中的实现方法是通过 uv_async_init 初始化线程同步函数, 然后在线程中通过 uv_async_send 发送同步消息到主线程.</p>
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/">https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2016/Ionic-%E5%A1%AB%E5%9D%91/">Ionic 填坑</a></li>
+        
+        <li><a href="/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/">取消 Windows 10 自动睡眠</a></li>
+        
+        <li><a href="/post/2016/Draw-swimming-koi-fish-in-pixijs/">用 Pixi.js 绘制游动的锦鲤</a></li>
+        
+        <li><a href="/post/2015/CSS3-%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%A8%E6%80%81%E8%BE%B9%E6%A1%86%E6%95%88%E6%9E%9C-live-boder/">CSS3 实现的动态边框效果 live boder</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "z4none/z4none.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555">在 VC 2015 下编译 Live555</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="NW.js 中 Nodejs 模块开发">NW.js 中 Nodejs 模块开发</a>
+    </li>
+    
+    <li>
+        <a href="https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/" title="Ionic 填坑">Ionic 填坑</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	    
+	    <p>
+	    	&copy; 2019 <a href="https://z4none.me">zi-blog By zi</a>.
+	    </p>
+	    <p id="busuanzi_container_site_uv">
+		  	Visited: <span id="busuanzi_value_site_uv"></span>
+		</p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.        
+        </p>        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-111542948-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>
