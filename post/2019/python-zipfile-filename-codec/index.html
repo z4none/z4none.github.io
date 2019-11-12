@@ -5,13 +5,13 @@
     <meta name="generator" content="Hugo 0.58.3" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>在 VC 2015 下编译 Live555 | zi-blog</title>
-    <meta property="og:title" content="在 VC 2015 下编译 Live555 - zi-blog">
+    <title>Python zipfile 文件名编码 | zi-blog</title>
+    <meta property="og:title" content="Python zipfile 文件名编码 - zi-blog">
     <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
-    <meta name="description" content="在 VC 2015 下编译 Live555">
+    <meta name="description" content="Python zipfile 文件名编码">
     
     <meta name="author" content="zi">
-    <meta property="og:url" content="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">
+    <meta property="og:url" content="https://z4none.me/post/2019/python-zipfile-filename-codec/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/normalize.css">
     
@@ -59,10 +59,10 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">在 VC 2015 下编译 Live555</h1>
+                            <h1 class="post-title">Python zipfile 文件名编码</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2017年12月1日
+                            2019年11月12日
                         </date>
                         
                         
@@ -72,79 +72,50 @@
                         
                         
                         <div class="post-content">
-                            <p>Live555 是一个经典的  C++ 开源流媒体解决方案, 像诸如 VLC 等软件都采用它实现流媒体播放相关功能, 从 ChangeLog 上看它创建于 2002 年, 并且还在持续更新中</p>
+                            <p>问题： 使用 Python3 的内置模块 zipfile 解压 zip 文件时，中文文件名出现乱码</p>
 
-<p>但由于它较老, 并且主要用在 Linux 下, 所以源码在 Windows 平台下编译有些问题, 下面是在 VC 2015 Community 下编译 Live555 的步骤</p>
+<h1 id="原因">原因</h1>
 
-<p>先下载 live555-latest.tar.gz 并解压</p>
-
-<p>打开 live/win32config 文件进行如下修改：</p>
+<p>zip 文件没有标准的文件名编码定义，有些 zip 会采用 UTF-8 编码，而有些工具（Winzip）统一使用 CP437 对文件名进行编码（DOS Latin），而不是当前操作系统的文件名编码，UTF-8 和 CP437 的区别是看是否设置了文件头标志位 EFS：</p>
 
 <ul>
-<li><p>注释掉 <code>!include &lt;ntwin32.mak&gt;</code>, 在前面加 # 即可</p></li>
-
-<li><p>将 <code>c:\Program Files\DevStudio\Vc</code> 修改为你的 VC 路径， 比如 <code>C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC</code></p></li>
-
-<li><p>将 <code>LINK = $linklink -out:</code> 替换为 <code>LINK = link ws2_32.lib /out:</code></p></li>
-
-<li><p>将 <code>LIBRARY_LINK =     lib -out:</code> 替换为 <code>LIBRARY_LINK = lib /out:</code></p></li>
-
-<li><p>将 <code>msvcirt.lib</code> 替换为 <code>msvcrt.lib</code></p></li>
+<li>如果为 0 表示采用 CP437</li>
+<li>如果为 1 表示采用 UTF-8</li>
 </ul>
 
-<p>调出 VC 命令行, 切换到 live 目录下运行 <code>genWindowsMakefiles</code>
-此命令会为各个项目生成 mak 文件, 但是 VC 2003 之后的版本无法通过 IDE 打开 mak 格式的工程文件, 需要通过 nmake 命令进行编译, 比如:</p>
+<p>python 3.6 的 zipfile 解压时的处理如下：</p>
 
-<pre><code>nmake /B -f liveMedia.mak
+<pre><code class="language-python">def _decodeFilename(self):
+    if self.flag_bits &amp; 0x800:
+        return self.filename.decode('utf-8')
+    else:
+        return self.filename
 </code></pre>
 
-<p>需要先编译以下 lib:
-1. liveMedia.mak
-2. groupsock.mak
-3. UsageEnvironment.mak
-4. BasicUsageEnvironment.mak</p>
+<p>如果有 UTF-8 标志，则解码成字符串，否则保持为 bytes 由用户处理</p>
 
-<p>可以将以上编译的过程通过以下批处理自动化:</p>
+<h1 id="解决方案">解决方案</h1>
 
-<pre><code>call &quot;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat&quot; x86
+<p>碰到此类文件，可以将文件名先编码维 CP437， 然后再解码为 CP936 即可获得正确结果</p>
 
-cd live
-del /S *.mak
-call genWindowsMakefiles
-
-cd liveMedia
-del *.obj *.lib
-nmake /B -f liveMedia.mak
-cd ..\groupsock
-del *.obj *.lib
-nmake /B -f groupsock.mak
-cd ..\UsageEnvironment
-del *.obj *.lib
-nmake /B -f UsageEnvironment.mak
-cd ..\BasicUsageEnvironment
-del *.obj *.lib
-nmake /B -f BasicUsageEnvironment.mak
-cd ..\testProgs
-del *.obj *.lib
-nmake /B -f testProgs.mak
-cd ..\mediaServer
-del *.obj *.lib
-nmake /B -f mediaServer.mak
-cd ..\proxyServer
-del *.obj *.lib
-nmake /B -f \proxyServer.mak
-cd ..
-
-cd ..
-pause
+<pre><code class="language-python">unzipped = zipfile.ZipFile(zip_file_path)
+for filename in unzipped.namelist():
+    if isinstance(item, bytes):
+        filename = filename.encode('cp437').decode('cp936')
 </code></pre>
+
+<h1 id="参考">参考</h1>
+
+<p><a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">ZIP File Format Specification</a></p>
+
+<p><a href="https://stackoverflow.com/questions/37723505/namelist-from-zipfile-returns-strings-with-an-invalid-encoding">https://stackoverflow.com/questions/37723505/namelist-from-zipfile-returns-strings-with-an-invalid-encoding</a></p>
                         </div>
 
                         
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2019/python-zipfile-filename-codec/">https://z4none.me/post/2019/python-zipfile-filename-codec/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -160,15 +131,15 @@ pause
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/">NW.js 中 Nodejs 模块开发</a></li>
+        <li><a href="/post/2019/cesium-load-3dtiles/">用 Cesium JS 加载建筑 3dTiles</a></li>
         
-        <li><a href="/post/2016/Ionic-%E5%A1%AB%E5%9D%91/">Ionic 填坑</a></li>
+        <li><a href="/post/2018/mfc-dynamic-layout/">MFC Dialog Dynamic Layout 实践</a></li>
         
-        <li><a href="/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/">取消 Windows 10 自动睡眠</a></li>
+        <li><a href="/post/2018/rand/">从 random 说起</a></li>
         
-        <li><a href="/post/2016/Draw-swimming-koi-fish-in-pixijs/">用 Pixi.js 绘制游动的锦鲤</a></li>
+        <li><a href="/post/2018/vagrant-ssh-permission-denied/">解决 Vagrant ssh 失败的问题</a></li>
         
-        <li><a href="/post/2015/CSS3-%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%A8%E6%80%81%E8%BE%B9%E6%A1%86%E6%95%88%E6%9E%9C-live-boder/">CSS3 实现的动态边框效果 live boder</a></li>
+        <li><a href="/post/2018/endian-and-bit-field/">字序对 bit field 的影响</a></li>
         
     </ul>
 </div>

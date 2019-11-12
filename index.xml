@@ -6,10 +6,19 @@
     <description>Recent content on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 29 Aug 2019 22:53:32 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 12 Nov 2019 11:30:06 +0800</lastBuildDate>
     
 	<atom:link href="https://z4none.me/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Python zipfile 文件名编码</title>
+      <link>https://z4none.me/post/2019/python-zipfile-filename-codec/</link>
+      <pubDate>Tue, 12 Nov 2019 11:30:06 +0800</pubDate>
+      
+      <guid>https://z4none.me/post/2019/python-zipfile-filename-codec/</guid>
+      <description>&lt;p&gt;问题： 使用 Python3 的内置模块 zipfile 解压 zip 文件时，中文文件名出现乱码&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>用 Cesium JS 加载建筑 3dTiles</title>
@@ -166,7 +175,7 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
       
       <guid>https://z4none.me/about/</guid>
       <description>zi，程序员一枚，会 C++、Python，略懂前端设计，不对齐不舒服斯基。
-这里是用 hexo 架设的 Blog，记录一些碎碎念。
+这里是用 hugo 架设的 Blog，记录一些碎碎念。
 z4none@gmail.com / @z4none  </description>
     </item>
     
