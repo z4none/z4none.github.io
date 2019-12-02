@@ -5,13 +5,13 @@
     <meta name="generator" content="Hugo 0.58.3" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>从 random 说起 | zi-blog</title>
-    <meta property="og:title" content="从 random 说起 - zi-blog">
+    <title>Win10 发送快捷方式到指定文件夹 | zi-blog</title>
+    <meta property="og:title" content="Win10 发送快捷方式到指定文件夹 - zi-blog">
     <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
-    <meta name="description" content="从 random 说起">
+    <meta name="description" content="Win10 发送快捷方式到指定文件夹">
     
     <meta name="author" content="zi">
-    <meta property="og:url" content="https://z4none.me/post/2018/rand/">
+    <meta property="og:url" content="https://z4none.me/post/2019/win10-send-shortcut-to-directory/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/normalize.css">
     
@@ -59,10 +59,10 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">从 random 说起</h1>
+                            <h1 class="post-title">Win10 发送快捷方式到指定文件夹</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2018年8月5日
+                            2019年12月2日
                         </date>
                         
                         
@@ -72,163 +72,51 @@
                         
                         
                         <div class="post-content">
-                            <p>在开发工程中如果需要生成随机数, 一般是通过 rand 函数, 它可以生成 0 到 RAND_MAX 范围的一个 <code>伪随机数</code>, 如果要让 rand 每次生成的随机序列不同, 可以通过 srand 函数不同的种子值, 一般设定为当前时间 srand(time(NULL)).</p>
+                            <p>在 Windows 平台下有不少快速启动工具，可以通过快捷键呼出，然后通过关键字启动指定软件。我之前使用的是 <a href="https://github.com/chenall/ALMRun">ALMRun</a>，最近发现了另一个工具 <a href="https://u.tools/">uTools</a>。</p>
 
-<p>以上是我之前对随机数的基本理解, 今天我在编码工程中发现了一些新的随机数相关的问题, 让我对随机数有了进一步的了解, 下面通过几段代码来进行说明.</p>
+<p>实际上 uTool 并不单是一个启动器，而是一组工具集，并且可以通过插件对其功能进行扩展。通过插件一些常用的功能就不需要打开另外的软件完成了，比如屏幕取色、计算文件 MD5、文本翻译等等。</p>
 
-<h2 id="srand-对-rand-的影响">srand 对 rand 的影响</h2>
+<p>本文讨论的是 uTool 作为程序启动器的使用相关配置。</p>
 
-<p>Windows VS 2017 输出</p>
+<p>uTools 可以自动搜索开始菜单中安装好的程序，对于绿色软件，可以将其快捷方式保存在一个文件夹中并且在插件偏好设置中，设置 “自定义快捷方式目录”，这个操作在 ALMRun 中已集成到 Windows 的右键菜单的发送项中，在 uTools 中就没有那么方便了，只能靠手动完成。</p>
 
-<pre><code class="language-c">for (int i = 0; i &lt; 10; i++)
-{
-    srand(i);
-    printf(&quot;seed = %d, rand = %d\n&quot;, i, rand());
-}
+<p>于是我写了一个批处理脚本来简化创建快捷方式的操作：</p>
 
-// 输出
-seed = 0, rand = 38
-seed = 1, rand = 41
-seed = 2, rand = 45
-seed = 3, rand = 48
-seed = 4, rand = 51
-seed = 5, rand = 54
-seed = 6, rand = 58
-seed = 7, rand = 61
-seed = 8, rand = 64
-seed = 9, rand = 68
+<pre><code class="language-batch">@echo off
+set Program=%~1
+set /p LinkName=shortcut name: 
+set WorkDir=%~dp1
+set WorkDir=%WorkDir:~,-1%
+(echo Set WshShell=CreateObject(&quot;WScript.Shell&quot;^)
+echo strDest=&quot;C:\\Tools\\uTools\\shortcuts\\&quot;
+echo Set oShellLink=WshShell.CreateShortcut(strDest^&amp;&quot;\%LinkName%.lnk&quot;^)
+echo oShellLink.TargetPath=&quot;%Program%&quot;
+echo oShellLink.WorkingDirectory=&quot;%WorkDir%&quot;
+echo oShellLink.WindowStyle=1
+echo oShellLink.Description=&quot;utools shortcut&quot;
+echo oShellLink.Save)&gt;%temp%\\makelnk.vbs
+echo done!
+%temp%\\makelnk.vbs
+del /f /q %temp%\\makelnk.vbs
+exit
 </code></pre>
 
-<p>可以看出在 Windows 平台 VC 下, 随着 srand seed 参数的增长, rand 首次的值也是增长的, 所以如果在 VC 下写以下这样的代码:</p>
+<p>其中 strDest 为固定路径，表示你存放快捷方式的文件夹，可根据需要修改。</p>
 
-<pre><code>int rand_number()
-{
-    srand(time(NULL));
-    return rand();
-}
+<p>将这个批处理文件保存到 Windows 的 Sendto 文件夹，打开方式为：在我的电脑中访问 shell:sendto，批处理可命名为你想要的名称</p>
 
-for(int i=0; i&lt;10; i++)
-{
-    printf(&quot;%d\n&quot;, rand_number());
-    Sleep(1000);
-}
-</code></pre>
+<p>保存完毕后可以在右键菜单中即可看到右键的发送中出现了此菜单项，选择后会出现提示符要求输入快捷方式的名称（用于搜索的名称），回车确认后快捷方式即可创建成功</p>
 
-<p>那么会发现它每次生成的随机数是递增的</p>
+<p>确保设置了 uTools 的自定义快捷方式目录，在搜索框中输入该名称即可查到对应的程序。</p>
 
-<p>windows 下 srand 和 rand 函数的实现如下:</p>
-
-<pre><code>void __cdecl srand (unsigned int seed)
-{
-    #ifdef _MT
-        _getptd()-&gt;_holdrand = (unsigned long)seed;
-    #else /* _MT */
-        holdrand = (long)seed;
-    #endif /* _MT */
-}
-
-int __cdecl rand (void)
-{
-    #ifdef _MT
-        _ptiddata ptd = _getptd();
-        return( ((ptd-&gt;_holdrand = ptd-&gt;_holdrand * 214013L + 2531011L) &gt;&gt; 16) &amp; 0x7fff );
-    #else /* _MT */
-        return(((holdrand = holdrand * 214013L + 2531011L) &gt;&gt; 16) &amp; 0x7fff);
-    #endif /* _MT */
-}
-</code></pre>
-
-<p>可以看到 ptd-&gt;_holdrand  和 rand 返回值的确是线性关系(线性同余法), 所以每次设定 srand 的 seed 值后的首次 rand 是随 seed 增加而增加的.</p>
-
-<p>同样的代码在 Ubuntu 下</p>
-
-<pre><code class="language-c">for (int i = 0; i &lt; 10; i++)
-{
-    srand(i);
-    printf(&quot;seed = %d, rand = %d\n&quot;, i, rand());
-}
-
-// 输出
-seed = 0, rand = 1804289383
-seed = 1, rand = 1804289383
-seed = 2, rand = 1505335290
-seed = 3, rand = 1205554746
-seed = 4, rand = 1968078301
-seed = 5, rand = 590011675
-seed = 6, rand = 290852541
-seed = 7, rand = 1045618677
-seed = 8, rand = 757547896
-seed = 9, rand = 444454915
-</code></pre>
-
-<h2 id="多线程">多线程</h2>
-
-<p>此问题同样需要分平台讨论, 在 Windows 平台下, srand 的 seed 是关联到线程的(参见前文代码), 也就是说需要在各个线程分别调用 srand.</p>
-
-<p>如果我们有一组线程同时创建, 那么 srand(time(NULL)) 很有可能获得相同的 seed 值, 这种情况一般是根据 time(NULL) 和 thread_id 或者局部变量地址组合生成 seed 用于初始化 srand:</p>
-
-<pre><code>//
-void thread_func(int foo)
-{
-    srand(time(NULL) * int(&amp;foo));
-    printf(&quot;rand = %d\n&quot;, rand());
-}
-</code></pre>
-
-<p>在 Linux 平台下, 只需在主线程中调用 srand 即可, 不过由于 rand 使用了内部的隐藏状态, 所以它不保证在多线程环境下行为可复现, 如果需要实现可复现的 rand 序列, 需要采用 rand_r() 函数.</p>
-
-<h2 id="生成范围内的随机数">生成范围内的随机数</h2>
-
-<p>在实际应用中往往会需要生成一定范围内的随机数, 较简单实现方式如下:</p>
-
-<pre><code class="language-c">int range(int from, int to)
-{
-    return from + rand() % (to - from + 1);
-}
-</code></pre>
-
-<p>当对数据要求不高时, 以上算法可以满足要求, 它有几个问题:
-1. 数据范围不能超过 RAND_MAX
-2. 数据分布不平均</p>
-
-<p>为了解决数据范围的问题, 可以采用以下方式扩大生成的随机数范围:</p>
-
-<pre><code class="language-c">int rand1()
-{
-    return (rand() * RAND_MAX) | rand();
-}
-</code></pre>
-
-<p>为了解决数据分布问题, 可采用以下方法:</p>
-
-<pre><code class="language-c">int range(int from, int to)
-{
-    return from + double(rand()) * (to - from) / RAND_MAX;
-}
-</code></pre>
-
-<p>不过即使是这样, 也不能保证完全平均, 随机到 to 值的几率也只有 1 / RAND_MAX.</p>
-
-<h2 id="使用-c-11-的随机数生成器">使用 C++ 11 的随机数生成器</h2>
-
-<p>现在推荐使用 C++ 11 的随机数生成器生成平均分布的任意范围的随机数, 使用方法如下:</p>
-
-<pre><code class="language-c++">std::random_device rd;
-std::mt19937 mt(rd());
-std::uniform_int_distribution&lt;int&gt; dist(1, 100);
-
-for (int i = 0; i &lt; 10; i++)
-{
-	printf(&quot;main, rand = %d\n&quot;, dist(mt));
-}
-</code></pre>
+<p><img src="http://s.z4none.me/images/20191202113922.png" alt="utools" /></p>
                         </div>
 
                         
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://z4none.me">zi</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2018/rand/">https://z4none.me/post/2018/rand/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://z4none.me/post/2019/win10-send-shortcut-to-directory/">https://z4none.me/post/2019/win10-send-shortcut-to-directory/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -244,15 +132,15 @@ for (int i = 0; i &lt; 10; i++)
     <h2>See Also</h2>
     <ul class="listing">
         
+        <li><a href="/post/2019/python-zipfile-filename-codec/">Python zipfile 文件名编码</a></li>
+        
+        <li><a href="/post/2019/cesium-load-3dtiles/">用 Cesium JS 加载建筑 3dTiles</a></li>
+        
+        <li><a href="/post/2018/mfc-dynamic-layout/">MFC Dialog Dynamic Layout 实践</a></li>
+        
+        <li><a href="/post/2018/rand/">从 random 说起</a></li>
+        
         <li><a href="/post/2018/vagrant-ssh-permission-denied/">解决 Vagrant ssh 失败的问题</a></li>
-        
-        <li><a href="/post/2018/endian-and-bit-field/">字序对 bit field 的影响</a></li>
-        
-        <li><a href="/post/2018/build-eXosip-in-vs2017/">在 VC 2018 下编译 eXosip</a></li>
-        
-        <li><a href="/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/">windows py 2.7 下安装 nnpy 的过程</a></li>
-        
-        <li><a href="/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">在 VC 2015 下编译 Live555</a></li>
         
     </ul>
 </div>
