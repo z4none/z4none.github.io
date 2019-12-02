@@ -83,6 +83,7 @@
 <p>于是我写了一个批处理脚本来简化创建快捷方式的操作：</p>
 
 <pre><code class="language-batch">@echo off
+title=z4none.me
 set Program=%~1
 set /p LinkName=shortcut name: 
 set WorkDir=%~dp1
@@ -105,7 +106,13 @@ exit
 
 <p>将这个批处理文件保存到 Windows 的 Sendto 文件夹，打开方式为：在我的电脑中访问 shell:sendto，批处理可命名为你想要的名称</p>
 
-<p>保存完毕后可以在右键菜单中即可看到右键的发送中出现了此菜单项，选择后会出现提示符要求输入快捷方式的名称（用于搜索的名称），回车确认后快捷方式即可创建成功</p>
+<p>保存完毕后可以在右键菜单中即可看到右键的发送中出现了此菜单项 (加号开头可排在最前)</p>
+
+<p><img src="http://s.z4none.me/images/20191202114818.png" alt="context menu" /></p>
+
+<p>选择此项后会出现提示符要求输入快捷方式的名称（用于搜索的名称），回车确认后快捷方式即可创建成功</p>
+
+<p><img src="http://s.z4none.me/images/20191202115259.png" alt="pormpt" /></p>
 
 <p>确保设置了 uTools 的自定义快捷方式目录，在搜索框中输入该名称即可查到对应的程序。</p>
 
