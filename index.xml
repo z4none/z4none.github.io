@@ -6,10 +6,29 @@
     <description>Recent content on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 02 Dec 2019 11:13:39 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Jan 2020 23:50:48 +0800</lastBuildDate>
     
 	<atom:link href="https://z4none.me/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Ffmpeg Dxva2</title>
+      <link>https://z4none.me/post/2020/ffmpeg-dxva2/</link>
+      <pubDate>Tue, 14 Jan 2020 23:50:48 +0800</pubDate>
+      
+      <guid>https://z4none.me/post/2020/ffmpeg-dxva2/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;本文针对的是 4.1，理论上 3.x 版本也适用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;使用 FFmpeg 播放高分辨率视频时，画面渲染效率是影响性能的主要原因，好在 FFmpeg 提供了各种硬件解码 / 加速的方案，可以极大的降低系统负载。&lt;/p&gt;
+
+&lt;p&gt;在 Windows 平台下常用硬件加速方案 dxva2。&lt;/p&gt;
+
+&lt;p&gt;网上已经有了一些使用 FFmpeg 实现 dxva2 硬件加速的文章，一般是通过手动配置 dxva2 解码器实现的（ffmpeg_dxva2）。&lt;/p&gt;
+
+&lt;p&gt;实际上现在 FFmpeg 可以通过搜索解码器的方式指定 dxva2 加速，本文就对这种方式进行说明。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Win10 发送快捷方式到指定文件夹</title>

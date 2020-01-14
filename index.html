@@ -60,6 +60,36 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://z4none.me/post/2020/ffmpeg-dxva2/" title="Ffmpeg Dxva2" >Ffmpeg Dxva2</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年1月14日
+                            </date>
+                            
+                            <div class="post-content">
+                                <blockquote>
+<p>本文针对的是 4.1，理论上 3.x 版本也适用。</p>
+</blockquote>
+
+<p>使用 FFmpeg 播放高分辨率视频时，画面渲染效率是影响性能的主要原因，好在 FFmpeg 提供了各种硬件解码 / 加速的方案，可以极大的降低系统负载。</p>
+
+<p>在 Windows 平台下常用硬件加速方案 dxva2。</p>
+
+<p>网上已经有了一些使用 FFmpeg 实现 dxva2 硬件加速的文章，一般是通过手动配置 dxva2 解码器实现的（ffmpeg_dxva2）。</p>
+
+<p>实际上现在 FFmpeg 可以通过搜索解码器的方式指定 dxva2 加速，本文就对这种方式进行说明。</p> ...
+                            </div>                            
+                            <p class="readmore">
+	                            <a href="https://z4none.me/post/2020/ffmpeg-dxva2/">阅读全文</a>
+	                        </p>
+                        </article>
+                    	
+                    
+		    			
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://z4none.me/post/2019/win10-send-shortcut-to-directory/" title="Win10 发送快捷方式到指定文件夹" >Win10 发送快捷方式到指定文件夹</a>
                                 </h1>
                             </header>
@@ -265,28 +295,6 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
                         </article>
                     	
                     
-		    			
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555" >在 VC 2015 下编译 Live555</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2017年12月1日
-                            </date>
-                            
-                            <div class="post-content">
-                                <p>Live555 是一个经典的  C++ 开源流媒体解决方案, 像诸如 VLC 等软件都采用它实现流媒体播放相关功能, 从 ChangeLog 上看它创建于 2002 年, 并且还在持续更新中</p>
-
-<p>但由于它较老, 并且主要用在 Linux 下, 所以源码在 Windows 平台下编译有些问题, 下面是在 VC 2015 Community 下编译 Live555 的步骤</p> ...
-                            </div>                            
-                            <p class="readmore">
-	                            <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/">阅读全文</a>
-	                        </p>
-                        </article>
-                    	
-                    
                     
 
 
@@ -335,6 +343,10 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
 <ul class="widget-list">
     
     <li>
+        <a href="https://z4none.me/post/2020/ffmpeg-dxva2/" title="Ffmpeg Dxva2">Ffmpeg Dxva2</a>
+    </li>
+    
+    <li>
         <a href="https://z4none.me/post/2019/win10-send-shortcut-to-directory/" title="Win10 发送快捷方式到指定文件夹">Win10 发送快捷方式到指定文件夹</a>
     </li>
     
@@ -368,10 +380,6 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
     
     <li>
         <a href="https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
-    </li>
-    
-    <li>
-        <a href="https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" title="在 VC 2015 下编译 Live555">在 VC 2015 下编译 Live555</a>
     </li>
     
 </ul>
@@ -408,7 +416,7 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
 <footer id="footer">
     <div class="container">	    
 	    <p>
-	    	&copy; 2019 <a href="https://z4none.me">zi-blog By zi</a>.
+	    	&copy; 2020 <a href="https://z4none.me">zi-blog By zi</a>.
 	    </p>
 	    <p id="busuanzi_container_site_uv">
 		  	Visited: <span id="busuanzi_value_site_uv"></span>
