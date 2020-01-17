@@ -181,8 +181,7 @@ textarea {
 #header {
     padding:58px 0 0;
     text-align:left;
-}
-#header .col-group {
+    background: #EEE;
     border-bottom: 1px solid #ddd;
 }
 .site-name h1{
@@ -217,8 +216,10 @@ textarea {
     margin-right:-1px;
     padding:0 1em;
     height:32px;
-    line-height:32px;
+    line-height:37px;
     color:#444;
+    border:1px solid transparent;
+    border-bottom:1px solid transparent;
 }
 #nav-menu a:first-child {
     border:none;
@@ -226,6 +227,7 @@ textarea {
 #nav-menu a:hover {
 }
 #nav-menu a.current {
+	background: #FFF;
     border:1px solid #ddd;
     border-bottom:1px solid #fff;
 }
@@ -245,7 +247,7 @@ textarea {
     top:0;
     right:10px;
     font-size: 20px;
-    line-height: 1.5;
+    line-height: 1.2;
     border:none;
     padding:14px 0;
     width:auto;
@@ -287,22 +289,17 @@ textarea {
 }
 .post-title {
     margin:0;
-    padding: 0.1em;    
-    text-indent: 0.4em;
-    font-size: 1.3em;
-    font-weight: bold;
-    color:#777;
-    border-left: solid 7px #0089e0;
+    font-size: 1.2em;
 }
-.post-title a{
+
+.post-title a {
 	display: block;
 }
-.post-title a:hover{
-	color:#0089e0;
+
+.post-title a:hover {
+	color: #0099FF;
 }
-.post-title a, .keyword {
-    color:#555;
-}
+
 .post-meta {
     padding:0;
     margin:9px 0 0;

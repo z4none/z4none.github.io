@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on zi-blog</title>
-    <link>https://z4none.me/post/</link>
+    <link>https://www.z4none.me/post/</link>
     <description>Recent content in Posts on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <lastBuildDate>Tue, 14 Jan 2020 23:50:48 +0800</lastBuildDate>
     
-	<atom:link href="https://z4none.me/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.z4none.me/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Ffmpeg Dxva2</title>
-      <link>https://z4none.me/post/2020/ffmpeg-dxva2/</link>
+      <title>FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</title>
+      <link>https://www.z4none.me/post/2020/ffmpeg-dxva2/</link>
       <pubDate>Tue, 14 Jan 2020 23:50:48 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2020/ffmpeg-dxva2/</guid>
+      <guid>https://www.z4none.me/post/2020/ffmpeg-dxva2/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;本文针对的是 4.1，理论上 3.x 版本也适用。&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -32,10 +32,10 @@
     
     <item>
       <title>Win10 发送快捷方式到指定文件夹</title>
-      <link>https://z4none.me/post/2019/win10-send-shortcut-to-directory/</link>
+      <link>https://www.z4none.me/post/2019/win10-send-shortcut-to-directory/</link>
       <pubDate>Mon, 02 Dec 2019 11:13:39 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2019/win10-send-shortcut-to-directory/</guid>
+      <guid>https://www.z4none.me/post/2019/win10-send-shortcut-to-directory/</guid>
       <description>&lt;p&gt;在 Windows 平台下有不少快速启动工具，可以通过快捷键呼出，然后通过关键字启动指定软件。我之前使用的是 &lt;a href=&#34;https://github.com/chenall/ALMRun&#34;&gt;ALMRun&lt;/a&gt;，最近发现了另一个工具 &lt;a href=&#34;https://u.tools/&#34;&gt;uTools&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;实际上 uTool 并不单是一个启动器，而是一组工具集，并且可以通过插件对其功能进行扩展。通过插件一些常用的功能就不需要打开另外的软件完成了，比如屏幕取色、计算文件 MD5、文本翻译等等。&lt;/p&gt;
@@ -45,19 +45,19 @@
     
     <item>
       <title>Python zipfile 文件名编码</title>
-      <link>https://z4none.me/post/2019/python-zipfile-filename-codec/</link>
+      <link>https://www.z4none.me/post/2019/python-zipfile-filename-codec/</link>
       <pubDate>Tue, 12 Nov 2019 11:30:06 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2019/python-zipfile-filename-codec/</guid>
+      <guid>https://www.z4none.me/post/2019/python-zipfile-filename-codec/</guid>
       <description>&lt;p&gt;问题： 使用 Python3 的内置模块 zipfile 解压 zip 文件时，中文文件名出现乱码&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>用 Cesium JS 加载建筑 3dTiles</title>
-      <link>https://z4none.me/post/2019/cesium-load-3dtiles/</link>
+      <link>https://www.z4none.me/post/2019/cesium-load-3dtiles/</link>
       <pubDate>Thu, 29 Aug 2019 22:53:32 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2019/cesium-load-3dtiles/</guid>
+      <guid>https://www.z4none.me/post/2019/cesium-load-3dtiles/</guid>
       <description>&lt;p&gt;随着现代浏览器的普及，在 WebGIS 应用中，越来越多的场合需要对城市建筑模型进行展示，目前较流行的解决方案有：&lt;/p&gt;
 
 &lt;ol&gt;
@@ -72,19 +72,19 @@
     
     <item>
       <title>MFC Dialog Dynamic Layout 实践</title>
-      <link>https://z4none.me/post/2018/mfc-dynamic-layout/</link>
+      <link>https://www.z4none.me/post/2018/mfc-dynamic-layout/</link>
       <pubDate>Thu, 18 Oct 2018 19:12:02 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2018/mfc-dynamic-layout/</guid>
+      <guid>https://www.z4none.me/post/2018/mfc-dynamic-layout/</guid>
       <description>&lt;p&gt;今天接触到一个 MFC Dialog 项目，对于一个 resizeable 的对话框，控件的布局一直是个棘手的问题，由于 MFC 框架较老并且为了保持向前兼容，所以一直没有提供这方面的支持，直到 VisualStudio 2015 再 MFC 中引进了 Dynamic Layout，关于 Dynamic Layout 的说明可以参见 MSDN 的 blog : &lt;a href=&#34;https://blogs.msdn.microsoft.com/vcblog/2015/04/29/mfc-dynamic-dialog-layout/&#34;&gt;MFC Dynamic Dialog Layout&lt;/a&gt;。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>从 random 说起</title>
-      <link>https://z4none.me/post/2018/rand/</link>
+      <link>https://www.z4none.me/post/2018/rand/</link>
       <pubDate>Sun, 05 Aug 2018 22:18:46 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2018/rand/</guid>
+      <guid>https://www.z4none.me/post/2018/rand/</guid>
       <description>&lt;p&gt;在开发工程中如果需要生成随机数, 一般是通过 rand 函数, 它可以生成 0 到 RAND_MAX 范围的一个 &lt;code&gt;伪随机数&lt;/code&gt;, 如果要让 rand 每次生成的随机序列不同, 可以通过 srand 函数不同的种子值, 一般设定为当前时间 srand(time(NULL)).&lt;/p&gt;
 
 &lt;p&gt;以上是我之前对随机数的基本理解, 今天我在编码工程中发现了一些新的随机数相关的问题, 让我对随机数有了进一步的了解, 下面通过几段代码来进行说明.&lt;/p&gt;</description>
@@ -92,10 +92,10 @@
     
     <item>
       <title>解决 Vagrant ssh 失败的问题</title>
-      <link>https://z4none.me/post/2018/vagrant-ssh-permission-denied/</link>
+      <link>https://www.z4none.me/post/2018/vagrant-ssh-permission-denied/</link>
       <pubDate>Mon, 09 Jul 2018 22:12:52 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2018/vagrant-ssh-permission-denied/</guid>
+      <guid>https://www.z4none.me/post/2018/vagrant-ssh-permission-denied/</guid>
       <description>&lt;h1 id=&#34;环境&#34;&gt;环境&lt;/h1&gt;
 
 &lt;ul&gt;
@@ -111,10 +111,10 @@
     
     <item>
       <title>字序对 bit field 的影响</title>
-      <link>https://z4none.me/post/2018/endian-and-bit-field/</link>
+      <link>https://www.z4none.me/post/2018/endian-and-bit-field/</link>
       <pubDate>Tue, 10 Apr 2018 12:04:45 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2018/endian-and-bit-field/</guid>
+      <guid>https://www.z4none.me/post/2018/endian-and-bit-field/</guid>
       <description>问题 下面是在进行 H264 数据分析时碰到的问题
 H264 nal indecator 是在 00 00 00 01 后面的一字节，其字段内容为： * forbidden_zero_bit(1) * nal_ref_idc(2) * nal_unit_type(5)
 比如对 0x67 / 0b01100111，各字段为： * forbidden_zero_bit = 0 * nal_ref_idc = 0b11 = 3 * nal_unit_type = 0b111 = 7
@@ -124,28 +124,28 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>在 VC 2018 下编译 eXosip</title>
-      <link>https://z4none.me/post/2018/build-eXosip-in-vs2017/</link>
+      <link>https://www.z4none.me/post/2018/build-eXosip-in-vs2017/</link>
       <pubDate>Mon, 15 Jan 2018 21:32:21 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2018/build-eXosip-in-vs2017/</guid>
+      <guid>https://www.z4none.me/post/2018/build-eXosip-in-vs2017/</guid>
       <description>&lt;p&gt;eXosip 是 osip 的一个封装，代码简洁易于使用，支持的平台广泛，但编译起来难以一次成功，下面记录一下我今天在 VC2017 环境下的编译过程&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>windows py 2.7 下安装 nnpy 的过程</title>
-      <link>https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/</link>
+      <link>https://www.z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/</link>
       <pubDate>Thu, 21 Dec 2017 13:22:35 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/</guid>
+      <guid>https://www.z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/</guid>
       <description>&lt;p&gt;nnpy 是 nanomsg 的 python bindings， 在持续更新中， 作者似乎不太关注 windows 平台， 但是 nanomsg 和 cffi 都是支持 windows 的， 所以 nnpy 也可以安装到 windows 的 python 中， 只是直接安装会报错， 下面记录一下安装的过程。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>在 VC 2015 下编译 Live555</title>
-      <link>https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/</link>
+      <link>https://www.z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/</link>
       <pubDate>Fri, 01 Dec 2017 21:22:41 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/</guid>
+      <guid>https://www.z4none.me/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/</guid>
       <description>&lt;p&gt;Live555 是一个经典的  C++ 开源流媒体解决方案, 像诸如 VLC 等软件都采用它实现流媒体播放相关功能, 从 ChangeLog 上看它创建于 2002 年, 并且还在持续更新中&lt;/p&gt;
 
 &lt;p&gt;但由于它较老, 并且主要用在 Linux 下, 所以源码在 Windows 平台下编译有些问题, 下面是在 VC 2015 Community 下编译 Live555 的步骤&lt;/p&gt;</description>
@@ -153,10 +153,10 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>NW.js 中 Nodejs 模块开发</title>
-      <link>https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/</link>
+      <link>https://www.z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/</link>
       <pubDate>Fri, 26 May 2017 22:50:24 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/</guid>
+      <guid>https://www.z4none.me/post/2017/NW.js-%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/</guid>
       <description>&lt;p&gt;NW.js 是一个基于 Nodejs 和 Chromium 的框架, 可以用 HTML5 和 Javascript 方便的开发桌面应用, 其中 Javascript 中也能使用 Nodejs 的模块, 包括第三方的 C++ 模块.&lt;/p&gt;
 
 &lt;p&gt;本文简要记录 NW.js 中 Node 模块开发过程, 其实整个过程和 Nodejs 模块开发类似, 不过需要用 nw-gyp 进行工程的编译.&lt;/p&gt;</description>
@@ -164,19 +164,19 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>Ionic 填坑</title>
-      <link>https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/</link>
+      <link>https://www.z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/</link>
       <pubDate>Mon, 07 Nov 2016 22:09:27 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/</guid>
+      <guid>https://www.z4none.me/post/2016/Ionic-%E5%A1%AB%E5%9D%91/</guid>
       <description>&lt;p&gt;在此记录 Ionic2 学习过程中遇到的问题&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>取消 Windows 10 自动睡眠</title>
-      <link>https://z4none.me/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/</link>
+      <link>https://www.z4none.me/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/</link>
       <pubDate>Mon, 02 May 2016 16:33:19 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/</guid>
+      <guid>https://www.z4none.me/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/</guid>
       <description>&lt;p&gt;最近 Windows 10 更新后，出现了一个令人困扰的问题，即使在高性能模式，它也会在 2 分钟无操作时自动睡眠&lt;/p&gt;
 
 &lt;p&gt;经过 Google 解决方法如下：&lt;/p&gt;</description>
@@ -184,28 +184,28 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>用 Pixi.js 绘制游动的锦鲤</title>
-      <link>https://z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/</link>
+      <link>https://www.z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/</link>
       <pubDate>Mon, 18 Jan 2016 11:54:00 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/</guid>
+      <guid>https://www.z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;http://www.pixijs.com/&#34;&gt;Pixi.js&lt;/a&gt; 是一个 Javascript 的 2D 图像引擎，它采用 WebGL 加速 可实现惊人的绘制效率，并且它对 2D 渲染、动画、特效等进行了封装，十分易于使用，下面我们来一步步用 Pixi 实现游动的鲤鱼的效果。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>CSS3 实现的动态边框效果 live boder</title>
-      <link>https://z4none.me/post/2015/CSS3-%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%A8%E6%80%81%E8%BE%B9%E6%A1%86%E6%95%88%E6%9E%9C-live-boder/</link>
+      <link>https://www.z4none.me/post/2015/CSS3-%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%A8%E6%80%81%E8%BE%B9%E6%A1%86%E6%95%88%E6%9E%9C-live-boder/</link>
       <pubDate>Sun, 13 Dec 2015 16:50:20 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2015/CSS3-%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%A8%E6%80%81%E8%BE%B9%E6%A1%86%E6%95%88%E6%9E%9C-live-boder/</guid>
+      <guid>https://www.z4none.me/post/2015/CSS3-%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%A8%E6%80%81%E8%BE%B9%E6%A1%86%E6%95%88%E6%9E%9C-live-boder/</guid>
       <description>&lt;p&gt;最近 Google+ 进行了改版，整体效果如何我就不吐槽了.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>蓝牙 4.0 数据传输</title>
-      <link>https://z4none.me/post/2015/BLE-data-transfer/</link>
+      <link>https://www.z4none.me/post/2015/BLE-data-transfer/</link>
       <pubDate>Wed, 21 Oct 2015 22:31:54 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2015/BLE-data-transfer/</guid>
+      <guid>https://www.z4none.me/post/2015/BLE-data-transfer/</guid>
       <description>&lt;p&gt;低功耗蓝牙（BLE）是为低速率应用设计的，比如控制信号、传感器数据、等，但是偶尔会有在 BLE 下使用更高速率的需要。
 理论的 BLE 无线数据传输速率是 1Mb/s，但是这是两个设备间物理层的传输速率，没有考虑到协议开销。
 实际上的最高速率接近 10kB/s 并且和设备相关，下面进行解释。&lt;/p&gt;</description>
@@ -213,10 +213,10 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>使用D3.js绘制行政区域地图</title>
-      <link>https://z4none.me/post/2014/%E4%BD%BF%E7%94%A8-D3.js-%E7%BB%98%E5%88%B6%E8%A1%8C%E6%94%BF%E5%8C%BA%E5%9F%9F%E5%9C%B0%E5%9B%BE/</link>
+      <link>https://www.z4none.me/post/2014/%E4%BD%BF%E7%94%A8-D3.js-%E7%BB%98%E5%88%B6%E8%A1%8C%E6%94%BF%E5%8C%BA%E5%9F%9F%E5%9C%B0%E5%9B%BE/</link>
       <pubDate>Sun, 24 Aug 2014 21:59:24 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2014/%E4%BD%BF%E7%94%A8-D3.js-%E7%BB%98%E5%88%B6%E8%A1%8C%E6%94%BF%E5%8C%BA%E5%9F%9F%E5%9C%B0%E5%9B%BE/</guid>
+      <guid>https://www.z4none.me/post/2014/%E4%BD%BF%E7%94%A8-D3.js-%E7%BB%98%E5%88%B6%E8%A1%8C%E6%94%BF%E5%8C%BA%E5%9F%9F%E5%9C%B0%E5%9B%BE/</guid>
       <description>&lt;p&gt;D3.js 是一个可视化的 Javascript 库，使用它可以方便的将数据以图形化的方式展示在 HTML 页面中。&lt;/p&gt;
 
 &lt;p&gt;现在我们的需求是根据行政区域的地理显示不同区域的状态（如温度、人口等）。&lt;/p&gt;</description>
@@ -224,19 +224,19 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>AcFun 自动签到 user script</title>
-      <link>https://z4none.me/post/2014/AcFun-%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0-user-script/</link>
+      <link>https://www.z4none.me/post/2014/AcFun-%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0-user-script/</link>
       <pubDate>Fri, 08 Aug 2014 11:23:47 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2014/AcFun-%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0-user-script/</guid>
+      <guid>https://www.z4none.me/post/2014/AcFun-%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0-user-script/</guid>
       <description>&lt;p&gt;打开 AcFun 首页自动签到，Chrome + TamperMonkey 测试通过&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Python 中使用 libmp3lame 进行 mp3 编解码</title>
-      <link>https://z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/</link>
+      <link>https://www.z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/</link>
       <pubDate>Wed, 09 Jul 2014 22:27:31 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/</guid>
+      <guid>https://www.z4none.me/post/2014/Python-%E4%B8%AD%E4%BD%BF%E7%94%A8-libmp3lame-%E8%BF%9B%E8%A1%8C-mp3-%E7%BC%96%E8%A7%A3%E7%A0%81/</guid>
       <description>&lt;p&gt;最近在研究 Python 的 mp3 编解码，
 可能是 mp3 格式专利问题，这方面可用并且还在维护的 Python 库没发现几个
 试了一下 pymedia 倒是可以，但是它官方支持的版本只到 Python 2.4
@@ -249,10 +249,10 @@ uint8_t a = 0x67; uint8_t f = (a &amp;amp; 0b10000000) &amp;gt;&amp;gt; 7; uint8
     
     <item>
       <title>Python list 分页</title>
-      <link>https://z4none.me/post/2014/python-list-%E5%88%86%E9%A1%B5/</link>
+      <link>https://www.z4none.me/post/2014/python-list-%E5%88%86%E9%A1%B5/</link>
       <pubDate>Fri, 04 Jul 2014 21:04:50 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2014/python-list-%E5%88%86%E9%A1%B5/</guid>
+      <guid>https://www.z4none.me/post/2014/python-list-%E5%88%86%E9%A1%B5/</guid>
       <description>&lt;p&gt;想要对 list 分页的同时，还想知道当前页是否有 prev 和 next，类似如下操作：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;paginator = Paginator(range(50), 12)
@@ -269,10 +269,10 @@ for page in paginator:
     
     <item>
       <title>Python 控制台版 2048</title>
-      <link>https://z4none.me/post/2014/Python-%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88-2048/</link>
+      <link>https://www.z4none.me/post/2014/Python-%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88-2048/</link>
       <pubDate>Sun, 11 May 2014 11:44:24 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2014/Python-%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88-2048/</guid>
+      <guid>https://www.z4none.me/post/2014/Python-%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88-2048/</guid>
       <description>&lt;p&gt;现在 2048 游戏这么火，我也尝试着用 Python 做了一个(控制台版)，貌似 Python 实现的代码行数都是 100 行左右。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://s.z4none.me/images/20190830162154.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
@@ -282,19 +282,19 @@ for page in paginator:
     
     <item>
       <title>Windows 下 SQLite3 shell 使用.sqliterc</title>
-      <link>https://z4none.me/post/2013/Windows-%E4%B8%8B-SQLite3-shell-%E4%BD%BF%E7%94%A8.sqliterc/</link>
+      <link>https://www.z4none.me/post/2013/Windows-%E4%B8%8B-SQLite3-shell-%E4%BD%BF%E7%94%A8.sqliterc/</link>
       <pubDate>Tue, 20 Aug 2013 15:21:33 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2013/Windows-%E4%B8%8B-SQLite3-shell-%E4%BD%BF%E7%94%A8.sqliterc/</guid>
+      <guid>https://www.z4none.me/post/2013/Windows-%E4%B8%8B-SQLite3-shell-%E4%BD%BF%E7%94%A8.sqliterc/</guid>
       <description>&lt;p&gt;最近需要使用 SQLite 保存数据, 使用的是 wxSqlite 的 ASE256 加密版本&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>在 Python 多线程中使用 print</title>
-      <link>https://z4none.me/post/2013/%E5%9C%A8-Python-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8-print/</link>
+      <link>https://www.z4none.me/post/2013/%E5%9C%A8-Python-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8-print/</link>
       <pubDate>Fri, 05 Jul 2013 22:37:01 +0800</pubDate>
       
-      <guid>https://z4none.me/post/2013/%E5%9C%A8-Python-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8-print/</guid>
+      <guid>https://www.z4none.me/post/2013/%E5%9C%A8-Python-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8-print/</guid>
       <description>&lt;p&gt;在 Python 多线程中使用 print 有时会将多行内容输出到一行，这是因为 Python 是将要输出的内容和换行符分开打印的。
 要避免这个问题，方法之一就是对 print 做线程同步操作：&lt;/p&gt;</description>
     </item>
