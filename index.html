@@ -60,6 +60,34 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/" title="网页实时监控视频直播技术 - rtsp 转 websocket" >网页实时监控视频直播技术 - rtsp 转 websocket</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年1月21日
+                            </date>
+                            
+                            <div class="post-content">
+                                分析 本文讨论的是监控行业的视频直播，这类应用的特点是实时性要求特别高，一般需要在1秒内，这样当用户控制摄像头云台时才能有较好效果
+已经有很多文章和讨论对相关技术以及特点进行了总结，在此不再赘述： * HLS 10秒级延时 * RTMP 秒级延时 * RTSP 毫秒级延时
+其中 RTSP 以及 RTP 广泛运用于监控行业，主流的摄像头厂商都会支持该协议，然而在 Web 的世界里，HTTP 才是标准，其他的直播技术都是基于 HTTP 实现的，比如 HLS、HTTP-FLV，由于是基于文件分发、所以这些方案的缺点是延迟较大。
+有没有既延迟小，又能在网页中播放的视频技术呢，随着新技术的出现这个问题也有了解决办法，首先视频传输：
+ WebSocket 可从服务器端主动推送数据到客户端，支持二进制数据、支持数据分发（广播模式）；
+ Web RTC 适用于点对点的通信，可将内部网络的视频源通过 P2P 的方式发到客户页面，延迟更小；
+  然后视频解码： * H264 现代浏览器以及摄像头都支持 H264 视频编解码，可以采用 HTML 的 MediaSourceExtension 进行硬解码；
+ H265 较新的摄像头一般推荐采用 H264（HEVC）对视频编码，遗憾的是目前（2020-01-21）浏览器都不支持，网上有通过 WASM FFmpeg 解码的案例，但是性能不佳；  实现 按照上面的分析，要实现摄像头实时视频的网页直播，可行的技术方案之一是，接入摄像头 RTSP 协议视频流，然后通过 Websocket 推送到页面播放。
+RTSP 接入 使用 FFMpeg 的 libav 进行 RTSP 视频数据的读取，其中关键点是低延迟，可参考以下 FFmpeg 参数 ...
+                            </div>                            
+                            <p class="readmore">
+	                            <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/">阅读全文</a>
+	                        </p>
+                        </article>
+                    	
+                    
+		    			
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://www.z4none.me/post/2020/ffmpeg-dxva2/" title="FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法" >FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a>
                                 </h1>
                             </header>
@@ -275,26 +303,6 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
                         </article>
                     	
                     
-		    			
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://www.z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程" >windows py 2.7 下安装 nnpy 的过程</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2017年12月21日
-                            </date>
-                            
-                            <div class="post-content">
-                                <p>nnpy 是 nanomsg 的 python bindings， 在持续更新中， 作者似乎不太关注 windows 平台， 但是 nanomsg 和 cffi 都是支持 windows 的， 所以 nnpy 也可以安装到 windows 的 python 中， 只是直接安装会报错， 下面记录一下安装的过程。</p> ...
-                            </div>                            
-                            <p class="readmore">
-	                            <a href="https://www.z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/">阅读全文</a>
-	                        </p>
-                        </article>
-                    	
-                    
                     
 
 
@@ -343,6 +351,10 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
 <ul class="widget-list">
     
     <li>
+        <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/" title="网页实时监控视频直播技术 - rtsp 转 websocket">网页实时监控视频直播技术 - rtsp 转 websocket</a>
+    </li>
+    
+    <li>
         <a href="https://www.z4none.me/post/2020/ffmpeg-dxva2/" title="FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法">FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a>
     </li>
     
@@ -378,10 +390,6 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
         <a href="https://www.z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
     </li>
     
-    <li>
-        <a href="https://www.z4none.me/post/2017/windows-py-2.7-%E4%B8%8B%E5%AE%89%E8%A3%85-nnpy-%E7%9A%84%E8%BF%87%E7%A8%8B/" title="windows py 2.7 下安装 nnpy 的过程">windows py 2.7 下安装 nnpy 的过程</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -397,6 +405,18 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
     <section class="widget">
         <h3 class="widget-title">标签</h3>
 <div class="tagcloud">
+    
+    <a href="https://www.z4none.me/tags/C&#43;&#43;/">C&#43;&#43;</a>
+    
+    <a href="https://www.z4none.me/tags/GIS/">GIS</a>
+    
+    <a href="https://www.z4none.me/tags/Javascript/">Javascript</a>
+    
+    <a href="https://www.z4none.me/tags/Python/">Python</a>
+    
+    <a href="https://www.z4none.me/tags/Video/">Video</a>
+    
+    <a href="https://www.z4none.me/tags/WebGL/">WebGL</a>
     
 </div>
     </section>

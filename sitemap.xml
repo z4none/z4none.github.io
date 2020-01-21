@@ -3,17 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://www.z4none.me/post/2020/ffmpeg-dxva2/</loc>
-    <lastmod>2020-01-14T23:50:48+08:00</lastmod>
+    <loc>https://www.z4none.me/post/</loc>
+    <lastmod>2020-01-21T22:00:11+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.z4none.me/post/</loc>
-    <lastmod>2020-01-14T23:50:48+08:00</lastmod>
+    <loc>https://www.z4none.me/tags/</loc>
+    <lastmod>2020-01-21T22:00:11+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.z4none.me/tags/Video/</loc>
+    <lastmod>2020-01-21T22:00:11+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.z4none.me/</loc>
+    <lastmod>2020-01-21T22:00:11+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.z4none.me/post/2020/stream-live-video-on-website/</loc>
+    <lastmod>2020-01-21T22:00:11+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.z4none.me/post/2020/ffmpeg-dxva2/</loc>
     <lastmod>2020-01-14T23:50:48+08:00</lastmod>
   </url>
   
@@ -23,13 +38,28 @@
   </url>
   
   <url>
+    <loc>https://www.z4none.me/tags/Python/</loc>
+    <lastmod>2019-11-12T11:30:06+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.z4none.me/post/2019/python-zipfile-filename-codec/</loc>
     <lastmod>2019-11-12T11:30:06+08:00</lastmod>
   </url>
   
   <url>
+    <loc>https://www.z4none.me/tags/GIS/</loc>
+    <lastmod>2019-08-29T22:53:32+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.z4none.me/post/2019/cesium-load-3dtiles/</loc>
     <lastmod>2019-08-29T22:53:32+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.z4none.me/tags/C&#43;&#43;/</loc>
+    <lastmod>2018-10-18T19:12:02+08:00</lastmod>
   </url>
   
   <url>
@@ -80,6 +110,16 @@
   <url>
     <loc>https://www.z4none.me/post/2016/%E5%8F%96%E6%B6%88-Windows-10-%E8%87%AA%E5%8A%A8%E7%9D%A1%E7%9C%A0/</loc>
     <lastmod>2016-05-02T16:33:19+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.z4none.me/tags/Javascript/</loc>
+    <lastmod>2016-01-18T11:54:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.z4none.me/tags/WebGL/</loc>
+    <lastmod>2016-01-18T11:54:00+08:00</lastmod>
   </url>
   
   <url>
@@ -139,10 +179,6 @@
   
   <url>
     <loc>https://www.z4none.me/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://www.z4none.me/tags/</loc>
   </url>
   
   <url>
