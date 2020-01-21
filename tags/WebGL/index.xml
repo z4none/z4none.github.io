@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>WebGL on zi-blog</title>
+    <link>https://www.z4none.me/tags/WebGL/</link>
+    <description>Recent content in WebGL on zi-blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 18 Jan 2016 11:54:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.z4none.me/tags/WebGL/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>用 Pixi.js 绘制游动的锦鲤</title>
+      <link>https://www.z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/</link>
+      <pubDate>Mon, 18 Jan 2016 11:54:00 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://www.pixijs.com/&#34;&gt;Pixi.js&lt;/a&gt; 是一个 Javascript 的 2D 图像引擎，它采用 WebGL 加速 可实现惊人的绘制效率，并且它对 2D 渲染、动画、特效等进行了封装，十分易于使用，下面我们来一步步用 Pixi 实现游动的鲤鱼的效果。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

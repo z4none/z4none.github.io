@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Video on zi-blog</title>
+    <link>https://www.z4none.me/tags/Video/</link>
+    <description>Recent content in Video on zi-blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 21 Jan 2020 22:00:11 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.z4none.me/tags/Video/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>网页实时监控视频直播技术 - rtsp 转 websocket</title>
+      <link>https://www.z4none.me/post/2020/stream-live-video-on-website/</link>
+      <pubDate>Tue, 21 Jan 2020 22:00:11 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/post/2020/stream-live-video-on-website/</guid>
+      <description>分析 本文讨论的是监控行业的视频直播，这类应用的特点是实时性要求特别高，一般需要在1秒内，这样当用户控制摄像头云台时才能有较好效果
+已经有很多文章和讨论对相关技术以及特点进行了总结，在此不再赘述： * HLS 10秒级延时 * RTMP 秒级延时 * RTSP 毫秒级延时
+其中 RTSP 以及 RTP 广泛运用于监控行业，主流的摄像头厂商都会支持该协议，然而在 Web 的世界里，HTTP 才是标准，其他的直播技术都是基于 HTTP 实现的，比如 HLS、HTTP-FLV，由于是基于文件分发、所以这些方案的缺点是延迟较大。
+有没有既延迟小，又能在网页中播放的视频技术呢，随着新技术的出现这个问题也有了解决办法，首先视频传输：
+ WebSocket 可从服务器端主动推送数据到客户端，支持二进制数据、支持数据分发（广播模式）；
+ Web RTC 适用于点对点的通信，可将内部网络的视频源通过 P2P 的方式发到客户页面，延迟更小；
+  然后视频解码： * H264 现代浏览器以及摄像头都支持 H264 视频编解码，可以采用 HTML 的 MediaSourceExtension 进行硬解码；
+ H265 较新的摄像头一般推荐采用 H264（HEVC）对视频编码，遗憾的是目前（2020-01-21）浏览器都不支持，网上有通过 WASM FFmpeg 解码的案例，但是性能不佳；  实现 按照上面的分析，要实现摄像头实时视频的网页直播，可行的技术方案之一是，接入摄像头 RTSP 协议视频流，然后通过 Websocket 推送到页面播放。
+RTSP 接入 使用 FFMpeg 的 libav 进行 RTSP 视频数据的读取，其中关键点是低延迟，可参考以下 FFmpeg 参数</description>
+    </item>
+    
+    <item>
+      <title>FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</title>
+      <link>https://www.z4none.me/post/2020/ffmpeg-dxva2/</link>
+      <pubDate>Tue, 14 Jan 2020 23:50:48 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/post/2020/ffmpeg-dxva2/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;本文针对的是 4.1，理论上 3.x 版本也适用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;使用 FFmpeg 播放高分辨率视频时，画面渲染效率是影响性能的主要原因，好在 FFmpeg 提供了各种硬件解码 / 加速的方案，可以极大的降低系统负载。&lt;/p&gt;
+
+&lt;p&gt;在 Windows 平台下常用硬件加速方案 dxva2。&lt;/p&gt;
+
+&lt;p&gt;网上已经有了一些使用 FFmpeg 实现 dxva2 硬件加速的文章，一般是通过手动配置 dxva2 解码器实现的（ffmpeg_dxva2）。&lt;/p&gt;
+
+&lt;p&gt;实际上现在 FFmpeg 可以通过搜索解码器的方式指定 dxva2 加速，本文就对这种方式进行说明。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

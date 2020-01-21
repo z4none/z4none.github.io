@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>网页实时监控视频直播技术 - rtsp 转 websocket | zi-blog</title>
+    <meta property="og:title" content="网页实时监控视频直播技术 - rtsp 转 websocket - zi-blog">
+    <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
+    <meta name="description" content="网页实时监控视频直播技术 - rtsp 转 websocket">
+    
+    <meta name="author" content="zi">
+    <meta property="og:url" content="https://www.z4none.me/post/2020/stream-live-video-on-website/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+        
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.z4none.me">首页</a>
+                    
+                    <a  href="https://www.z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">网页实时监控视频直播技术 - rtsp 转 websocket</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年1月21日
+                        </date>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">| <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h1 id="分析">分析</h1>
+
+<p>本文讨论的是监控行业的视频直播，这类应用的特点是实时性要求特别高，一般需要在1秒内，这样当用户控制摄像头云台时才能有较好效果</p>
+
+<p>已经有很多文章和讨论对相关技术以及特点进行了总结，在此不再赘述：
+* <a href="https://zh.wikipedia.org/zh-hans/HTTP_Live_Streaming">HLS</a> 10秒级延时
+* <a href="https://zh.wikipedia.org/wiki/%E5%AE%9E%E6%97%B6%E6%B6%88%E6%81%AF%E5%8D%8F%E8%AE%AE">RTMP</a> 秒级延时
+* <a href="https://zh.wikipedia.org/wiki/%E5%8D%B3%E6%99%82%E4%B8%B2%E6%B5%81%E5%8D%94%E5%AE%9A">RTSP</a> 毫秒级延时</p>
+
+<p>其中 RTSP 以及 RTP 广泛运用于监控行业，主流的摄像头厂商都会支持该协议，然而在 Web 的世界里，HTTP 才是标准，其他的直播技术都是基于 HTTP 实现的，比如 HLS、HTTP-FLV，由于是基于文件分发、所以这些方案的缺点是延迟较大。</p>
+
+<p>有没有既延迟小，又能在网页中播放的视频技术呢，随着新技术的出现这个问题也有了解决办法，首先视频传输：</p>
+
+<ul>
+<li><p>WebSocket
+可从服务器端主动推送数据到客户端，支持二进制数据、支持数据分发（广播模式）；</p></li>
+
+<li><p>Web RTC
+适用于点对点的通信，可将内部网络的视频源通过 P2P 的方式发到客户页面，延迟更小；</p></li>
+</ul>
+
+<p>然后视频解码：
+* H264
+现代浏览器以及摄像头都支持 H264 视频编解码，可以采用 HTML 的 MediaSourceExtension 进行硬解码；</p>
+
+<ul>
+<li>H265
+较新的摄像头一般推荐采用 H264（HEVC）对视频编码，遗憾的是目前（2020-01-21）浏览器都不支持，网上有通过 WASM FFmpeg 解码的案例，但是性能不佳；</li>
+</ul>
+
+<h1 id="实现">实现</h1>
+
+<p>按照上面的分析，要实现摄像头实时视频的网页直播，可行的技术方案之一是，接入摄像头 RTSP 协议视频流，然后通过 Websocket 推送到页面播放。</p>
+
+<h2 id="rtsp-接入">RTSP 接入</h2>
+
+<p>使用 FFMpeg 的 libav 进行 RTSP 视频数据的读取，其中关键点是低延迟，可参考以下 FFmpeg 参数</p>
+
+<pre><code>ffplay -i &quot;rtsp://admin:123456@192.168.1.99/h264/ch3/sub/av_stream&quot; -fflags nobuffer -flags low_delay -framedrop -strict experimental -probesize 32
+</code></pre>
+
+<h2 id="fmp4-封包">fMp4 封包</h2>
+
+<p>由于 HTML5 MediaSourceExtension 支持的 H264 数据格式为 fragmented MP4，所以需要对 RTSP 中读取到的 H264 NAL 进行打包处理，打包完成后通过 Websocket 发送到页面。</p>
+
+<h2 id="mediasourceextension-解码">MediaSourceExtension 解码</h2>
+
+<p>页面收到 fMP4 数据后将其发送到 SourceBuffer 即可实现解码和播放，需要注意的是有时由于网络抖动导致数据发送不及时，会导致播放进度落后，这是可以通过调整 player 的 currentTime 追赶播放进度。</p>
+
+<p>基于以上流程我已实现了用于演示的 Demo</p>
+
+<p><img src="http://s.z4none.me/images/20200122002551.gif" alt="" /></p>
+
+<p>左侧为基于 Websocekt 传输视频数据的页面播放器，右边为海康自身的 IE ActiveX 播放器，可以看到基本无延迟。</p>
+
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://www.z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://www.z4none.me/post/2020/stream-live-video-on-website/">https://www.z4none.me/post/2020/stream-live-video-on-website/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2020/ffmpeg-dxva2/">FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a></li>
+        
+        <li><a href="/post/2019/win10-send-shortcut-to-directory/">Win10 发送快捷方式到指定文件夹</a></li>
+        
+        <li><a href="/post/2019/python-zipfile-filename-codec/">Python zipfile 文件名编码</a></li>
+        
+        <li><a href="/post/2019/cesium-load-3dtiles/">用 Cesium JS 加载建筑 3dTiles</a></li>
+        
+        <li><a href="/post/2018/mfc-dynamic-layout/">MFC Dialog Dynamic Layout 实践</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://www.z4none.me/tags/Video">Video</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "z4none/z4none.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/" title="网页实时监控视频直播技术 - rtsp 转 websocket">网页实时监控视频直播技术 - rtsp 转 websocket</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2020/ffmpeg-dxva2/" title="FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法">FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2019/win10-send-shortcut-to-directory/" title="Win10 发送快捷方式到指定文件夹">Win10 发送快捷方式到指定文件夹</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2019/python-zipfile-filename-codec/" title="Python zipfile 文件名编码">Python zipfile 文件名编码</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.z4none.me/tags/C&#43;&#43;/">C&#43;&#43;</a>
+    
+    <a href="https://www.z4none.me/tags/GIS/">GIS</a>
+    
+    <a href="https://www.z4none.me/tags/Javascript/">Javascript</a>
+    
+    <a href="https://www.z4none.me/tags/Python/">Python</a>
+    
+    <a href="https://www.z4none.me/tags/Video/">Video</a>
+    
+    <a href="https://www.z4none.me/tags/WebGL/">WebGL</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	    
+	    <p>
+	    	&copy; 2020 <a href="https://www.z4none.me">zi-blog By zi</a>.
+	    </p>
+	    <p id="busuanzi_container_site_uv">
+		  	Visited: <span id="busuanzi_value_site_uv"></span>
+		</p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.        
+        </p>        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-111542948-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

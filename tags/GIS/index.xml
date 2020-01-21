@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GIS on zi-blog</title>
+    <link>https://www.z4none.me/tags/GIS/</link>
+    <description>Recent content in GIS on zi-blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 29 Aug 2019 22:53:32 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.z4none.me/tags/GIS/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>用 Cesium JS 加载建筑 3dTiles</title>
+      <link>https://www.z4none.me/post/2019/cesium-load-3dtiles/</link>
+      <pubDate>Thu, 29 Aug 2019 22:53:32 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/post/2019/cesium-load-3dtiles/</guid>
+      <description>&lt;p&gt;随着现代浏览器的普及，在 WebGIS 应用中，越来越多的场合需要对城市建筑模型进行展示，目前较流行的解决方案有：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Cesium 的 3DTiles&lt;/li&gt;
+&lt;li&gt;Mapbox-gl 的 vector source 根据 height 拉伸&lt;/li&gt;
+&lt;li&gt;ArcGIS&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;本文讨论 Cesium 的 3DTiles，什么是 3DTiles
+&lt;a href=&#34;https://github.com/AnalyticalGraphicsInc/3d-tiles/tree/master/specification&#34;&gt;https://github.com/AnalyticalGraphicsInc/3d-tiles/tree/master/specification&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
