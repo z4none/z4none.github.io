@@ -76,10 +76,13 @@
 
 <p>本文讨论的是监控行业的视频直播，这类应用的特点是实时性要求特别高，一般需要在1秒内，这样当用户控制摄像头云台时才能有较好效果。</p>
 
-<p>已经有很多文章和讨论对相关技术以及特点进行了总结，在此不再赘述：
-* <a href="https://zh.wikipedia.org/zh-hans/HTTP_Live_Streaming">HLS</a> 10秒级延时
-* <a href="https://zh.wikipedia.org/wiki/%E5%AE%9E%E6%97%B6%E6%B6%88%E6%81%AF%E5%8D%8F%E8%AE%AE">RTMP</a> 秒级延时
-* <a href="https://zh.wikipedia.org/wiki/%E5%8D%B3%E6%99%82%E4%B8%B2%E6%B5%81%E5%8D%94%E5%AE%9A">RTSP</a> 毫秒级延时</p>
+<p>已经有很多文章和讨论对相关技术以及特点进行了总结，在此不再赘述：</p>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-hans/HTTP_Live_Streaming">HLS</a> 10秒级延时</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%AE%9E%E6%97%B6%E6%B6%88%E6%81%AF%E5%8D%8F%E8%AE%AE">RTMP</a> 秒级延时</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%8D%B3%E6%99%82%E4%B8%B2%E6%B5%81%E5%8D%94%E5%AE%9A">RTSP</a> 毫秒级延时</li>
+</ul>
 
 <p>其中 RTSP 以及 RTP 广泛运用于监控行业，主流的摄像头厂商都会支持该协议，然而在 Web 的世界里，HTTP 才是标准，其他的直播技术都是基于 HTTP 实现的，比如 HLS、HTTP-FLV，由于是基于文件分发、所以这些方案的缺点是延迟较大。</p>
 
