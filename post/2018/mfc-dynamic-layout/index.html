@@ -72,7 +72,7 @@
                         </div>
                         
                         <div class="post-content">
-                            <p>今天接触到一个 MFC Dialog 项目，对于一个 resizeable 的对话框，控件的布局一直是个棘手的问题，由于 MFC 框架较老并且为了保持向前兼容，所以一直没有提供这方面的支持，直到 VisualStudio 2015 再 MFC 中引进了 Dynamic Layout，关于 Dynamic Layout 的说明可以参见 MSDN 的 blog : <a href="https://blogs.msdn.microsoft.com/vcblog/2015/04/29/mfc-dynamic-dialog-layout/">MFC Dynamic Dialog Layout</a>。</p>
+                            <p>今天接触到一个 MFC Dialog 项目，对于一个 resizeable 的对话框，控件的布局一直是个棘手的问题，由于 MFC 框架较老并且为了保持向前兼容，所以一直没有提供这方面的支持，直到 VisualStudio 2015 在 MFC 中引进了 Dynamic Layout，关于 Dynamic Layout 的说明可以参见 MSDN 的 blog : <a href="https://blogs.msdn.microsoft.com/vcblog/2015/04/29/mfc-dynamic-dialog-layout/">MFC Dynamic Dialog Layout</a>。</p>
 
 <p>简单地说就是可以在 VisualStudio 的资源编辑器中设置控件的 Dynamic Layout 的 Moving 和 Sizing 属性实现控件的对其和按比例缩放。</p>
 
@@ -96,7 +96,7 @@ rect.bottom = rect.top + max(m_MinSize.cy, rect.Height());
 
 <pre><code class="language-C++">//
 void CMyDlg::OnGetMinMaxInfo(MINMAXINFO * lpMMI)
-{	
+{
 	CMFCDynamicLayout * layout = GetDynamicLayout();
 
 	if (layout)
@@ -121,7 +121,7 @@ void CMyDlg::OnGetMinMaxInfo(MINMAXINFO * lpMMI)
 <pre><code class="language-C++">BOOL CMylDlg::OnInitDialog()
 {
     ...
-    
+
     CMFCDynamicLayout * layout = GetDynamicLayout();
 	layout-&gt;SetMinSize(CSize(0, 0));
 }
@@ -130,6 +130,32 @@ void CMyDlg::OnGetMinMaxInfo(MINMAXINFO * lpMMI)
 <p>当然以上两个方法可以结合起来， 在 OnInitDialog 中设置窗口最小大小为一个指定值，而不使用资源编辑器中设计的大小。</p>
 
 <p><img src="https://s.z4none.me/images/20190830163956.gif" alt="" /></p>
+
+<h2 id="wtl">WTL</h2>
+
+<p>值得一提的是，在 2018 年 WTL 也对 DynamicLayout 也提供了支持，将对话框继承于 CDynamicDialogLayout ，并在 OnInitDialog 中调用 InitDynamicLayout 即可</p>
+
+<pre><code class="language-c++">class CMainDlg :
+	public CDynamicDialogLayout&lt;CMainDlg&gt;
+	...
+{
+	// void InitDynamicLayout(bool bAddGripper = true, bool bMinTrackSize = true)
+	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL&amp; /*bHandled*/)
+	{
+		//
+		//
+		InitDynamicLayout(true, true);
+	}
+}
+
+</code></pre>
+
+<p>其中 InitDynamicLayout 的参数含义为：</p>
+
+<ul>
+<li>bAddGripper 是否显示 Gripper，右下的拖动手柄</li>
+<li>bMinTrackSize 是否限定窗口最小尺寸</li>
+</ul>
                         </div>
 
                         
