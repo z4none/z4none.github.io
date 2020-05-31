@@ -80,17 +80,21 @@ Platforms: GLFW, SDL2, Win32, Glut, OSX.
 
 <p>有时我们需要在 FFMpeg 应用中使用 GUI，传统的方式是将 FFMpeg 嵌入到 GUI 应用程序中， 有了 Imgui，我们可以在视频画面之上叠加我们的 GUI 界面。</p>
 
+<p><img src="http://s.z4none.me/images/20200531225245.png" alt="" /></p>
+
 <p><img src="http://s.z4none.me/images/20200531221622.gif" alt="" /></p>
 
 <p>关键步骤如下：</p>
 
 <ol>
 <li>指定 FFmpeg 解码方式为 Dxva2</li>
-<li>通过 Shared handle 的方式创建共享 Surface</li>
+<li>通过 shared handle 的方式创建共享 Surface</li>
 <li>将 FFmpeg 解码得到的每帧画面 StretchRect 到该 Surface</li>
 <li>在 Imgui 中将该 Surface 渲染为背景（也可作为窗口内容进行渲染）</li>
 </ol>
 
+<p>要注意的是 D3D9ex 才能支持 shared handle，但是 FFmpeg 中初始化 D3D9ex 时会失败，自动回退到 D3D9.
+可以通过手动创建 D3D9ex 相关设备并传入 AVCodecContext 来解决。</p>
                         </div>
 
                         
