@@ -6,7 +6,7 @@
     <description>Recent content in Tags on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 21 Jan 2020 22:00:11 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 31 May 2020 10:00:55 +0800</lastBuildDate>
     
 	<atom:link href="https://www.z4none.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,18 @@
     <item>
       <title>Video</title>
       <link>https://www.z4none.me/tags/Video/</link>
-      <pubDate>Tue, 21 Jan 2020 22:00:11 +0800</pubDate>
+      <pubDate>Sun, 31 May 2020 10:00:55 +0800</pubDate>
       
       <guid>https://www.z4none.me/tags/Video/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>“FFmpeg”</title>
+      <link>https://www.z4none.me/tags/FFmpeg/</link>
+      <pubDate>Sun, 31 May 2020 10:00:55 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/tags/FFmpeg/</guid>
       <description></description>
     </item>
     

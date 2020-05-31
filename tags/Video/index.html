@@ -66,6 +66,25 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/">当 FFmpeg 遇见 Imgui</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月31日
+                            </date>
+                            
+                            <div class="post-content">
+                                Dear Imgui 是一个立即模式的 C++ GUI lLibrary，与其他 GUI 框架不同，它将渲染与框架逻辑分离，用户可以根据自己的需要选择渲染方式，官方支持如下：
+Renderers: DirectX9, DirectX10, DirectX11, DirectX12, OpenGL (legacy), OpenGL3/ES/ES2 (modern), Vulkan, Metal. Platforms: GLFW, SDL2, Win32, Glut, OSX.  有时我们需要在 FFMpeg 应用中使用 GUI，传统的方式是将 FFMpeg 嵌入到 GUI 应用程序中， 有了 Imgui，我们可以在视频画面之上叠加我们的 GUI 界面。
+关键步骤如下：
+ 指定 FFmpeg 解码方式为 Dxva2 通过 Shared handle 的方式创建共享 Surface 将 FFmpeg 解码得到的每帧画面 StretchRect 到该 Surface 在 Imgui 中将该 Surface 渲染为背景（也可作为窗口内容进行渲染）  ……
+                                <p class="readmore"><a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/">网页实时监控视频直播技术 - rtsp 转 websocket</a>
                                 </h1>
                             </header>
@@ -132,6 +151,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/" title="当 FFmpeg 遇见 Imgui">当 FFmpeg 遇见 Imgui</a>
+    </li>
+    
+    <li>
         <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/" title="网页实时监控视频直播技术 - rtsp 转 websocket">网页实时监控视频直播技术 - rtsp 转 websocket</a>
     </li>
     
@@ -167,10 +190,6 @@
         <a href="https://www.z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
     </li>
     
-    <li>
-        <a href="https://www.z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip">在 VC 2018 下编译 eXosip</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -188,6 +207,8 @@
 <div class="tagcloud">
     
     <a href="https://www.z4none.me/tags/C&#43;&#43;/">C&#43;&#43;</a>
+    
+    <a href="https://www.z4none.me/tags/FFmpeg/">FFmpeg</a>
     
     <a href="https://www.z4none.me/tags/GIS/">GIS</a>
     

@@ -5,13 +5,13 @@
     <meta name="generator" content="Hugo 0.58.3" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WebGL | zi-blog</title>
-    <meta property="og:title" content="WebGL - zi-blog">
+    <title>“FFmpeg” | zi-blog</title>
+    <meta property="og:title" content="“FFmpeg” - zi-blog">
     <meta name="Keywords" content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript">
-    <meta name="description" content="WebGL">
+    <meta name="description" content="“FFmpeg”">
     
     <meta name="author" content="zi">
-    <meta property="og:url" content="https://www.z4none.me/tags/WebGL/">
+    <meta property="og:url" content="https://www.z4none.me/tags/FFmpeg/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/normalize.css">
         
@@ -57,7 +57,7 @@
                     
                     <h3 class="archive-title">
                         包含标签
-                        <span class="keyword">WebGL</span>
+                        <span class="keyword">“FFmpeg”</span>
                         的文章
                     </h3>
                     
@@ -66,16 +66,45 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://www.z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/">用 Pixi.js 绘制游动的锦鲤</a>
+                                    <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/">当 FFmpeg 遇见 Imgui</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
-                                2016年1月18日
+                                2020年5月31日
                             </date>
                             
                             <div class="post-content">
-                                <p><a href="http://www.pixijs.com/">Pixi.js</a> 是一个 Javascript 的 2D 图像引擎，它采用 WebGL 加速 可实现惊人的绘制效率，并且它对 2D 渲染、动画、特效等进行了封装，十分易于使用，下面我们来一步步用 Pixi 实现游动的鲤鱼的效果。</p>……
-                                <p class="readmore"><a href="https://www.z4none.me/post/2016/Draw-swimming-koi-fish-in-pixijs/">阅读全文</a></p>
+                                Dear Imgui 是一个立即模式的 C++ GUI lLibrary，与其他 GUI 框架不同，它将渲染与框架逻辑分离，用户可以根据自己的需要选择渲染方式，官方支持如下：
+Renderers: DirectX9, DirectX10, DirectX11, DirectX12, OpenGL (legacy), OpenGL3/ES/ES2 (modern), Vulkan, Metal. Platforms: GLFW, SDL2, Win32, Glut, OSX.  有时我们需要在 FFMpeg 应用中使用 GUI，传统的方式是将 FFMpeg 嵌入到 GUI 应用程序中， 有了 Imgui，我们可以在视频画面之上叠加我们的 GUI 界面。
+关键步骤如下：
+ 指定 FFmpeg 解码方式为 Dxva2 通过 Shared handle 的方式创建共享 Surface 将 FFmpeg 解码得到的每帧画面 StretchRect 到该 Surface 在 Imgui 中将该 Surface 渲染为背景（也可作为窗口内容进行渲染）  ……
+                                <p class="readmore"><a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://www.z4none.me/post/2020/ffmpeg-dxva2/">FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年1月14日
+                            </date>
+                            
+                            <div class="post-content">
+                                <blockquote>
+<p>本文针对的是 4.1，理论上 3.x 版本也适用。</p>
+</blockquote>
+
+<p>使用 FFmpeg 播放高分辨率视频时，画面渲染效率是影响性能的主要原因，好在 FFmpeg 提供了各种硬件解码 / 加速的方案，可以极大的降低系统负载。</p>
+
+<p>在 Windows 平台下常用硬件加速方案 dxva2。</p>
+
+<p>网上已经有了一些使用 FFmpeg 实现 dxva2 硬件加速的文章，一般是通过手动配置 dxva2 解码器实现的（ffmpeg_dxva2）。</p>
+
+<p>实际上现在 FFmpeg 可以通过搜索解码器的方式指定 dxva2 加速，本文就对这种方式进行说明。</p>……
+                                <p class="readmore"><a href="https://www.z4none.me/post/2020/ffmpeg-dxva2/">阅读全文</a></p>
                             </div>
                         </article>
                     

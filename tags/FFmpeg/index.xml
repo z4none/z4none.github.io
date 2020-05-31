@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Video on zi-blog</title>
-    <link>https://www.z4none.me/tags/Video/</link>
-    <description>Recent content in Video on zi-blog</description>
+    <title>“FFmpeg” on zi-blog</title>
+    <link>https://www.z4none.me/tags/FFmpeg/</link>
+    <description>Recent content in “FFmpeg” on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <lastBuildDate>Sun, 31 May 2020 10:00:55 +0800</lastBuildDate>
     
-	<atom:link href="https://www.z4none.me/tags/Video/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.z4none.me/tags/FFmpeg/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -21,17 +21,6 @@
 Renderers: DirectX9, DirectX10, DirectX11, DirectX12, OpenGL (legacy), OpenGL3/ES/ES2 (modern), Vulkan, Metal. Platforms: GLFW, SDL2, Win32, Glut, OSX.  有时我们需要在 FFMpeg 应用中使用 GUI，传统的方式是将 FFMpeg 嵌入到 GUI 应用程序中， 有了 Imgui，我们可以在视频画面之上叠加我们的 GUI 界面。
 关键步骤如下：
  指定 FFmpeg 解码方式为 Dxva2 通过 Shared handle 的方式创建共享 Surface 将 FFmpeg 解码得到的每帧画面 StretchRect 到该 Surface 在 Imgui 中将该 Surface 渲染为背景（也可作为窗口内容进行渲染）  </description>
-    </item>
-    
-    <item>
-      <title>网页实时监控视频直播技术 - rtsp 转 websocket</title>
-      <link>https://www.z4none.me/post/2020/stream-live-video-on-website/</link>
-      <pubDate>Tue, 21 Jan 2020 22:00:11 +0800</pubDate>
-      
-      <guid>https://www.z4none.me/post/2020/stream-live-video-on-website/</guid>
-      <description>&lt;h1 id=&#34;分析&#34;&gt;分析&lt;/h1&gt;
-
-&lt;p&gt;本文讨论的是监控行业的视频直播，这类应用的特点是实时性要求特别高，一般需要在1秒内，这样当用户控制摄像头云台时才能有较好效果。&lt;/p&gt;</description>
     </item>
     
     <item>
