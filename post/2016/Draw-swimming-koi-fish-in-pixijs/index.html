@@ -84,25 +84,25 @@
 <p>在 Pixi 中，动画的绘制和 WebGL 一样是通过 requestAnimationFrame 实现的，在每一帧清空整个场景，然后再将对应的精灵绘制到对应位置上即可实现动画效果，首先我们要绘制一条静态的鱼，考虑到后面需要让它动起来，我们将它分为几部分：身体和左右鳍，如图：</p>
 
 <p><img src="http://s.z4none.me/images/20200601180253.png" alt="" />
-<a href="https://www.z4none.me/fish/1.html">demo 1</a></p>
+<a href="https://www.z4none.me/fish/1.html" target="_blank">demo 1</a></p>
 
 <p>这里为了示意，将图片设为半透明</p>
 
 <p>然后在渲染函数中根据时间（tick）将左右鳍动起来，这里通过改变 yScale 即可实现鱼鳍划动的效果</p>
 
 <p><img src="http://s.z4none.me/images/20200601180443.gif" alt="" />
-<a href="https://www.z4none.me/fish/2.html">demo 2</a></p>
+<a href="https://www.z4none.me/fish/2.html" target="_blank">demo 2</a></p>
 
 <p>现在鱼显得有些呆板，现实中的鱼在水中游动时是会扭动身体的，扭动的效果可以通过 PIXI.mesh.Rope 实现， 相关例子：<a href="http://pixijs.io/examples/#/basics/textured-mesh.js">http://pixijs.io/examples/#/basics/textured-mesh.js</a></p>
 
 <p>对应我们的鱼不需要取那么多控制点，这里只取了 4 个控制点，在扭动的同时，鱼鳍的位置也要跟随改变</p>
 
 <p><img src="http://s.z4none.me/images/20200601180809.gif" alt="" />
-<a href="https://www.z4none.me/fish/3.html">demo 3</a></p>
+<a href="https://www.z4none.me/fish/3.html" target="_blank">demo 3</a></p>
 
 <p>接下来就是让这个固定的鱼在场景中游动起来了，鱼游动的规律可以根据需要自己建模来模拟，我这里实现了一个 Demo 只是简单的让它们游向随机点。</p>
 
-<p><a href="https://www.z4none.me/fish/">final live demo</a></p>
+<p><a href="https://www.z4none.me/fish/" target="_blank">final live demo</a></p>
                         </div>
 
                         
