@@ -25,7 +25,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
     <script src="//cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
+    <script type="text/javascript" src="/js/Valine.min.js"></script>
     
   </head>
 </html>
@@ -73,6 +73,9 @@
                         </date>
                         
                         <div class="post-meta fr">
+                            <span id="/post/2017/%E5%9C%A8-VC-2015-%E4%B8%8B%E7%BC%96%E8%AF%91-Live555/" class="leancloud_visitors" data-flag-title="在 VC 2015 下编译 Live555">
+                                访问: <span class="leancloud-visitors-count"></span>
+                            </span>
                         </div>
                         
                         <div class="post-content">
@@ -191,13 +194,6 @@ pause
                     
 <div class="post bg-white">
   <div id="vcomments"></div>
-  <script>
-    new Valine({
-      el: "#vcomments",
-      appId: "YRMbeocqfOQ26SYG6bTLe8Nf-gzGzoHsz",
-      appKey: "FrF9RfMGSpFjndnWJCVal9xc",
-    });
-  </script>
 </div>
 
                 </div>
@@ -307,6 +303,11 @@ pause
 	    	&copy; 2020 <a href="https://www.z4none.me">zi-blog By zi</a>.
         </p>
         <p>
+            <span id="__pv" class="leancloud_visitors" data-flag-title="PV">
+                访问: <span class="leancloud-visitors-count"></span>
+            </span>
+        </p>
+        <p>
         	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
         </p>
         <p>
@@ -315,7 +316,7 @@ pause
     </div>
 </footer>
 
-    
+
     <script type="text/javascript">
         
         (function () {
@@ -323,21 +324,20 @@ pause
         }());
     </script>
 
-    <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?e75c03aed9c63bbc417b4026b5bd9b8d";
-      var s = document.getElementsByTagName("script")[0]; 
-      s.parentNode.insertBefore(hm, s);
-    })();
-    </script>
     <script type="text/javascript" src="/js/prism.js" async="true"></script>
 
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
 
+<script>
+    new Valine({
+      el: "#vcomments",
+      appId: "YRMbeocqfOQ26SYG6bTLe8Nf-gzGzoHsz",
+      appKey: "FrF9RfMGSpFjndnWJCVal9xc",
+      visitor: true
+    });
+  </script>
 
 
 
