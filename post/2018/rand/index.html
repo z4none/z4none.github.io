@@ -25,7 +25,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
     <script src="//cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/Valine.min.js"></script>
+    <script src="//cdn1.lncld.net/static/js/2.5.0/av-min.js"></script>
     
   </head>
 </html>
@@ -73,7 +73,7 @@
                         </date>
                         
                         <div class="post-meta fr">
-                            <span id="/post/2018/rand/" class="leancloud_visitors" data-flag-title="从 random 说起">
+                            <span data-id="/post/2018/rand/" class="leancloud-visitors" data-title="从 random 说起">
                                 Visited: <span class="leancloud-visitors-count"></span>
                             </span>
                         </div>
@@ -273,7 +273,20 @@ for (int i = 0; i &lt; 10; i++)
                     </article>
                     
 <div class="post bg-white">
-  <div id="vcomments"></div>
+  <div id="container"></div>
+  <link rel="stylesheet" href="/css/gitment-default.css">
+  <script src="/js/gitment.js"></script>
+  <script>
+  var gitment = new Gitment({
+    owner: 'z4none',
+    repo: 'z4none.github.io',
+    oauth: {
+      client_id: 'c1234594cb871e18d00d',
+      client_secret: '9cd622032f9bc0e57a293f0eeb787c5fdcc1559a',
+    },
+  })
+  gitment.render('container')
+  </script>
 </div>
 
                 </div>
@@ -383,7 +396,7 @@ for (int i = 0; i &lt; 10; i++)
 	    	&copy; 2020 <a href="https://www.z4none.me">zi-blog By zi</a>.
         </p>
         <p>
-            <span id="__pv" class="leancloud_visitors" data-flag-title="PV">
+            <span class="leancloud-visitors" data-id="__pv" data-title="PV">
                 访问: <span class="leancloud-visitors-count"></span>
             </span>
         </p>
@@ -404,20 +417,12 @@ for (int i = 0; i &lt; 10; i++)
         }());
     </script>
 
-    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src="/js/prism.js" async="true"></script>
 
 
 <a id="rocket" href="#top"></a>
-<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
-
-<script>
-    new Valine({
-      el: "#vcomments",
-      appId: "YRMbeocqfOQ26SYG6bTLe8Nf-gzGzoHsz",
-      appKey: "FrF9RfMGSpFjndnWJCVal9xc",
-      visitor: true
-    });
-  </script>
+<script src="/js/totop.js?v=0.0.0" async=""></script>
+<script src="/js/counter.min.js"></script>
 
 
 
