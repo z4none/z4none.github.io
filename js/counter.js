@@ -1,9 +1,10 @@
+var objectName = "Counter";
 function showCounter() {
   AV.initialize(
     "YRMbeocqfOQ26SYG6bTLe8Nf-gzGzoHsz",
     "FrF9RfMGSpFjndnWJCVal9xc"
   );
-  var Counter = AV.Object.extend(name);
+  var Counter = AV.Object.extend(objectName);
   $(".leancloud-visitors").each(function () {
     var id = $(this).data("id");
     var title = $(this).data("title");
@@ -25,23 +26,19 @@ function showCounter() {
 
 function getOrCreate(Counter, id, title) {
   return new Promise(function (resolve, reject) {
-    const query = new AV.Query("Counter");
+    const query = new AV.Query(objectName);
     query.equalTo("id", id);
-    query.find().then(function (results) {
-      if (results.length === 0) {
+    query.find().then(function (counterList) {
+      if (counterList.length === 0) {
         var counter = new Counter();
-        var acl = new AV.ACL();
-        acl.setPublicReadAccess(true);
-        acl.setWriteAccess("*", true);
-        counter.setACL(acl);
         counter.set("id", id);
         counter.set("title", title);
         counter.set("time", 0);
-        counter.save().then(function (counter) {
+        counter.save().then(function () {
           resolve(counter);
         });
       } else {
-        resolve(results[0]);
+        resolve(counterList[0]);
       }
     });
   });
