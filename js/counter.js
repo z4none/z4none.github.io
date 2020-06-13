@@ -30,6 +30,10 @@ function getOrCreate(Counter, id, title) {
     query.find().then(function (results) {
       if (results.length === 0) {
         var counter = new Counter();
+        var acl = new AV.ACL();
+        acl.setPublicReadAccess(true);
+        acl.setWriteAccess("*", true);
+        counter.setACL(acl);
         counter.set("id", id);
         counter.set("title", title);
         counter.set("time", 0);
