@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.58.3" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>修改 symbol 文件 signature | zi-blog</title>
+    <meta property="og:title" content="修改 symbol 文件 signature - zi-blog" />
+    <meta
+      name="Keywords"
+      content="Programe,Code,Software,Network,Python,C&#43;&#43;,Javascript"
+    />
+    <meta
+      name="description"
+      content="修改 symbol 文件 signature"
+    />
+    
+    <meta name="author" content="zi" />
+    <meta property="og:url" content="https://www.z4none.me/post/2020/modify-symbol-file/" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="//cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="//cdn1.lncld.net/static/js/2.5.0/av-min.js"></script>
+    
+  </head>
+</html>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.z4none.me">
+                        zi-blog
+                    </a>
+                
+                <p class="description">Code &amp; Art &amp; Ideas</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.z4none.me">首页</a>
+                    
+                    <a  href="https://www.z4none.me/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.z4none.me/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+        
+        
+    <div class="container">
+        <div id="main-wrapper">
+            <div  id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">修改 symbol 文件 signature</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年12月14日
+                        </date>
+                        
+                        <div class="post-meta fr">
+                            <span class="leancloud-visitors" data-id="/post/2020/modify-symbol-file/" data-title="修改 symbol 文件 signature">
+                                Visited: <span class="leancloud-visitors-count"></span>
+                            </span>
+                        </div>
+                        
+                        <div class="post-content">
+                            
+
+<h1 id="问题">问题</h1>
+
+<p>当开发 Windows 桌面应用程序时，我们时常需要对程序的崩溃信息进行分析，Windows 提供了 minidump 机制能将程序崩溃状态保存下来进行分析，前提是需要结合对应版本的 pdb 和 exe 文件。</p>
+
+<p>比如如下程序：</p>
+
+<pre><code class="language-c++">//
+#include &lt;iostream&gt;
+
+int main()
+{
+    std::cout &lt;&lt; &quot;Hello World!\n&quot;;
+
+    int* p = 0;
+    *p = 0;
+
+    std::cout &lt;&lt; &quot;Fatal Error\n&quot;;
+    return 0;
+}
+</code></pre>
+
+<p>运行时会发生访问异常，配合 <code>MiniDumpWriteDump</code> API 会生成异常发生时的 dmp 文件，配合 exe 和 pdb 文件，再 WinDbg 中即可看到崩溃发生的位置，这对于我们排查问题十分有帮助。</p>
+
+<pre><code>EXCEPTION_RECORD:  (.exr -1)
+ExceptionAddress: 00007ff7e8b57919 (test_symbol!main+0x0000000000000049)
+   ExceptionCode: c0000005 (Access violation)
+  ExceptionFlags: 00000000
+NumberParameters: 2
+   Parameter[0]: 0000000000000001
+   Parameter[1]: 0000000000000000
+Attempt to write to address 0000000000000000
+
+WRONG_SYMBOLS_TIMESTAMP: 70e69bad
+
+WRONG_SYMBOLS_SIZE: 1f5000
+
+FAULTING_MODULE: 00007fff5da90000 ntdll
+
+ADDITIONAL_DEBUG_TEXT:  
+You can run '.symfix; .reload' to try to fix the symbol path and load symbols. ; Followup set based on attribute [Is_ChosenCrashFollowupThread] from Frame:[0] on thread:[PSEUDO_THREAD]
+
+STACK_TEXT:  
+00000045`3f7bf820 00007ff7`e8b57919 test_symbol!main+0x49
+00000045`3f7bf940 00007ff7`e8b58cc9 test_symbol!invoke_main+0x39
+00000045`3f7bf990 00007ff7`e8b58bae test_symbol!__scrt_common_main_seh+0x12e
+00000045`3f7bfa00 00007ff7`e8b58a6e test_symbol!__scrt_common_main+0xe
+00000045`3f7bfa30 00007ff7`e8b58d59 test_symbol!mainCRTStartup+0x9
+00000045`3f7bfa60 00007fff`5c856fd4 kernel32!BaseThreadInitThunk+0x14
+00000045`3f7bfa90 00007fff`5dadcec1 ntdll!RtlUserThreadStart+0x21
+
+
+STACK_COMMAND:  .ecxr ; kb ; ** Pseudo Context ** Pseudo ** Value: 2094f0d9800 ** ; kb
+
+FAULTING_SOURCE_LINE:  F:\workspace\test\test_symbol\test_symbol.cpp
+
+FAULTING_SOURCE_FILE:  F:\workspace\test\test_symbol\test_symbol.cpp
+
+FAULTING_SOURCE_LINE_NUMBER:  9
+
+FAULTING_SOURCE_CODE:  
+     5: {
+     6:     std::cout &lt;&lt; &quot;Hello World!\n&quot;;
+     7: 
+     8:     int* p = 0;
+&gt;    9:     *p = 0;
+    10: 
+    11:     std::cout &lt;&lt; &quot;Fatal Error\n&quot;;
+    12:     return 0;
+    13: }
+
+
+BUGCHECK_CODE:  70e69bad
+
+EXCEPTION_CODE_STR:  70E69BAD
+</code></pre>
+
+<blockquote>
+<p>dmp 文件可以通过 CrashDumper 辅助类自动生成</p>
+
+<p><a href="https://gist.github.com/z4none/502622698d5eda0fb69bd71737724962">https://gist.github.com/z4none/502622698d5eda0fb69bd71737724962</a></p>
+</blockquote>
+
+<p>在实际的开发工作中，软件版本是不停的迭代的，为了对不同版本的 exe 和 pdb 文件进行统一管理，微软提供了 symstore.exe 来将 exe 和 pdb 收录到符号服务器上 Symbol Server。</p>
+
+<blockquote>
+<p>每次发布新版本软件时，通过 symstore add 命令将 exe 和 pdb 保存到指定目录，比如</p>
+
+<p>symstore add /r /f .*.* /s c:\mysymbol /t test</p>
+</blockquote>
+
+<p>WinDbg 或者 cdb 能够通过配置符号服务器自动加载正确的 exe 和 pdb 进行分析。</p>
+
+<blockquote>
+<p>在环境变量中配置 _NT_SYMBOL_PATH = c:\mysymbol 即可配置 WinDbg 可用的自定义 Symbol Server 或者目录</p>
+</blockquote>
+
+<p>但是有时我们发布程序时，有时会忘记了保存符号文件，当有 dmp 需要分析时已经太晚了，即使项目 checkout 到对应版本重新编译得到了 exe 和 pdb，WinDbg 也会抱怨说：WRONG_SYMBOLS_TIMESTAMP，此时只能勉强看到出错的模块和大致的堆栈，十分不便。</p>
+
+<pre><code>EXCEPTION_RECORD:  (.exr -1)
+ExceptionAddress: 00007ff700837919 (test_symbol+0x0000000000017919)
+   ExceptionCode: c0000005 (Access violation)
+  ExceptionFlags: 00000000
+NumberParameters: 2
+   Parameter[0]: 0000000000000001
+   Parameter[1]: 0000000000000000
+Attempt to write to address 0000000000000000
+
+WRONG_SYMBOLS_TIMESTAMP: 70e69bad
+
+WRONG_SYMBOLS_SIZE: 1f5000
+
+FAULTING_MODULE: 00007fff5da90000 ntdll
+
+ADDITIONAL_DEBUG_TEXT:  
+You can run '.symfix; .reload' to try to fix the symbol path and load symbols. ; Followup set based on attribute [Is_ChosenCrashFollowupThread] from Frame:[0] on thread:[PSEUDO_THREAD]
+
+STACK_TEXT:  
+00000013`426ff7e0 00007ff7`00837919 test_symbol+0x17919
+00000013`426ff7e8 00007fff`07af7110 MSVCP140D!std::cout+0x0
+00000013`426ff7f0 00007ff7`00842638 test_symbol+0x22638
+00000013`426ff7f8 cccccccc`cccccccc unknown!unknown+0x0
+00000013`426ff800 cccccccc`cccccccc unknown!unknown+0x0
+00000013`426ff808 cccccccc`cccccccc unknown!unknown+0x0
+
+
+STACK_COMMAND:  .ecxr ; kb ; ** Pseudo Context ** Pseudo ** Value: 210e988d7e0 ** ; kb
+
+BUGCHECK_CODE:  70e69bad
+
+EXCEPTION_CODE_STR:  70E69BAD
+
+EXCEPTION_STR:  WRONG_SYMBOLS
+
+PROCESS_NAME:  ntdll.wrong.symbols.dll
+
+IMAGE_NAME:  ntdll.wrong.symbols.dll
+
+MODULE_NAME: ntdll_wrong_symbols
+
+SYMBOL_NAME:  ntdll_wrong_symbols!70E69BAD1F5000
+
+FAILURE_BUCKET_ID:  WRONG_SYMBOLS_X64_19041.1.amd64fre.vb_release.191206-1406_TIMESTAMP_300109-035525_70E69BAD_ntdll.wrong.symbols.dll!70E69BAD1F5000
+</code></pre>
+
+<h1 id="原因">原因</h1>
+
+<p>要解决这个问题，需要从 symstore 备份 exe 和 pdb 文件的方式说起。</p>
+
+<p>symstore.exe 每次备份时通过 exe 的 timestamp 和 pdb 的 signature 等信息将其存入指定路径，这样就能保证多个版本的同名文件可以共存于一个 Symbol Server 上：</p>
+
+<p>exe 的存储路径为</p>
+
+<pre><code>test_symbol.exe/5FD78A8030000/test_symbol.exe
+</code></pre>
+
+<p>其中 5FD78A80 为 Timestamp，30000 为 image size</p>
+
+<p>pdb 的存储路径为</p>
+
+<pre><code>test_symbol.pdb/B0FFD19C07A44043A4F615DD7BE108021/test_symbol.pdb
+</code></pre>
+
+<p>其中 B0FFD19C07A44043A4F615DD7BE10802 为 Signature，1 为 age</p>
+
+<p>VisualStudio 每次编译程序时会自动修改文件的 Timestamp 和 Signature，所以即使是相同的代码编译出的 exe 和 pdb，和旧版本的 dmp 文件也无法匹配。</p>
+
+<h2 id="解决方法">解决方法</h2>
+
+<p>既然 VisualStudio 每次会生成新的 Timestamp 和 Signature，那么为了能让 dmp 文件找到 exe 和 pdb， 那我们就需要将 timestamp 和 Signature 改回对应的值。</p>
+
+<p>在 WinDbg 先执行 <code>!sym noisy</code> 命令，然后再执行<code>!analyze -v</code> 可以看到 WinDbg 的查找过程，且其中就包含 Timestamp 和 Signature</p>
+
+<pre><code>SYMSRV:  BYINDEX: 0x9
+         c:\winsymbols
+         test_symbol.exe
+         5FDA21D230000
+SYMSRV:  UNC: c:\winsymbols\test_symbol.exe\5FDA21D230000\test_symbol.exe - path not found
+SYMSRV:  UNC: c:\winsymbols\test_symbol.exe\5FDA21D230000\test_symbol.ex_ - path not found
+SYMSRV:  UNC: c:\winsymbols\test_symbol.exe\5FDA21D230000\file.ptr - path not found
+SYMSRV:  RESULT: 0x80070003
+SYMSRV:  BYINDEX: 0xA
+         c:\winsymbols*http://msdl.microsoft.com/download/symbols
+         test_symbol.exe
+         5FDA21D230000
+SYMSRV:  UNC: c:\winsymbols\test_symbol.exe\5FDA21D230000\test_symbol.exe - path not found
+SYMSRV:  UNC: c:\winsymbols\test_symbol.exe\5FDA21D230000\test_symbol.ex_ - path not found
+SYMSRV:  UNC: c:\winsymbols\test_symbol.exe\5FDA21D230000\file.ptr - path not found
+SYMSRV:  HTTPGET: /download/symbols/test_symbol.exe/5FDA21D230000/test_symbol.exe
+SYMSRV:  HttpQueryInfo: 80190194 - HTTP_STATUS_NOT_FOUND
+SYMSRV:  HTTPGET: /download/symbols/test_symbol.exe/5FDA21D230000/test_symbol.ex_
+SYMSRV:  HttpQueryInfo: 80190194 - HTTP_STATUS_NOT_FOUND
+SYMSRV:  HTTPGET: /download/symbols/test_symbol.exe/5FDA21D230000/file.ptr
+SYMSRV:  HttpQueryInfo: 80190194 - HTTP_STATUS_NOT_FOUND
+SYMSRV:  RESULT: 0x80190194
+SYMSRV:  BYINDEX: 0xB
+</code></pre>
+
+<p>然后通过 ChkMatch.exe 工具得到新编译的 exe 和 pdb 的 Timestamp 和 Signature，通过 Hex Editor 对新的 exe 和 pdb 中的 Timestamp 的 Signature 值进行替换，再通过 Synstore 工具进行备份。</p>
+
+                        </div>
+
+                        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://www.z4none.me">zi</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://www.z4none.me/post/2020/modify-symbol-file/">https://www.z4none.me/post/2020/modify-symbol-file/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+                        <hr />
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2020/ffmpeg-meet-imgui/">当 FFmpeg 遇见 Imgui</a></li>
+        
+        <li><a href="/post/2020/stream-live-video-on-website/">网页实时监控视频直播技术 - rtsp 转 websocket</a></li>
+        
+        <li><a href="/post/2020/ffmpeg-dxva2/">FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a></li>
+        
+        <li><a href="/post/2019/win10-send-shortcut-to-directory/">Win10 发送快捷方式到指定文件夹</a></li>
+        
+        <li><a href="/post/2019/python-zipfile-filename-codec/">Python zipfile 文件名编码</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+<div class="post bg-white">
+  <script
+    src="https://utteranc.es/client.js"
+    repo="z4none/z4none.github.io"
+    issue-term="pathname"
+    label="Utterances"
+    theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+</div>
+
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.z4none.me">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.z4none.me/post/2020/modify-symbol-file/" title="修改 symbol 文件 signature">修改 symbol 文件 signature</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/" title="当 FFmpeg 遇见 Imgui">当 FFmpeg 遇见 Imgui</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2020/stream-live-video-on-website/" title="网页实时监控视频直播技术 - rtsp 转 websocket">网页实时监控视频直播技术 - rtsp 转 websocket</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2020/ffmpeg-dxva2/" title="FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法">FFmpeg 使用 Dxva2 硬件加速以及渲染的一种方法</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2019/win10-send-shortcut-to-directory/" title="Win10 发送快捷方式到指定文件夹">Win10 发送快捷方式到指定文件夹</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2019/python-zipfile-filename-codec/" title="Python zipfile 文件名编码">Python zipfile 文件名编码</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2019/cesium-load-3dtiles/" title="用 Cesium JS 加载建筑 3dTiles">用 Cesium JS 加载建筑 3dTiles</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/mfc-dynamic-layout/" title="MFC Dialog Dynamic Layout 实践">MFC Dialog Dynamic Layout 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/rand/" title="从 random 说起">从 random 说起</a>
+    </li>
+    
+    <li>
+        <a href="https://www.z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.z4none.me/tags/C&#43;&#43;/">C&#43;&#43;</a>
+    
+    <a href="https://www.z4none.me/tags/FFmpeg/">FFmpeg</a>
+    
+    <a href="https://www.z4none.me/tags/GIS/">GIS</a>
+    
+    <a href="https://www.z4none.me/tags/Javascript/">Javascript</a>
+    
+    <a href="https://www.z4none.me/tags/Python/">Python</a>
+    
+    <a href="https://www.z4none.me/tags/Video/">Video</a>
+    
+    <a href="https://www.z4none.me/tags/WebGL/">WebGL</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.z4none.me/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">	
+	    <p>
+	    	&copy; 2020 <a href="https://www.z4none.me">zi-blog By zi</a>.
+        </p>
+        <p>
+            <span class="leancloud-visitors" data-id="__pv" data-title="PV">
+                Visited : <span class="leancloud-visitors-count"></span>
+            </span>
+        </p>
+        <p>
+        	Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        </p>
+        <p>
+        	Theme based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        </p>
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+        
+        (function () {
+            $("pre code").parent().addClass("line-numbers")
+        }());
+    </script>
+
+    <script src="/js/prism.js" async="true"></script>
+
+
+<a id="rocket" href="#top"></a>
+<script src="/js/totop.js?v=0.0.0" async=""></script>
+<script src="/js/counter.min.js"></script>
+<script type="text/javascript" src="https://tajs.qq.com/stats?sId=66566530" charset="UTF-8"></script>
+
+
+
+</body>
+</html>
