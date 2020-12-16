@@ -64,6 +64,30 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://www.z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响" >字序对 bit field 的影响</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年4月10日
+                            </date>
+                            
+                            <div class="post-content">
+                                问题 下面是在进行 H264 数据分析时碰到的问题
+H264 nal indecator 是在 00 00 00 01 后面的一字节，其字段内容为： * forbidden_zero_bit(1) * nal_ref_idc(2) * nal_unit_type(5)
+比如对 0x67 / 0b01100111，各字段为： * forbidden_zero_bit = 0 * nal_ref_idc = 0b11 = 3 * nal_unit_type = 0b111 = 7
+常规的提取方式如下：
+uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a &amp; 0b01100000) &gt;&gt; 5; uint8_t type = (a &amp; 0b00011111);  f = 0, nri = 3, type = 7 结果没有问题。 ...
+                            </div>                            
+                            <p class="readmore">
+	                            <a href="https://www.z4none.me/post/2018/endian-and-bit-field/">阅读全文</a>
+	                        </p>
+                        </article>
+                    	
+                    
+		    			
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://www.z4none.me/post/2018/build-eXosip-in-vs2017/" title="在 VC 2018 下编译 eXosip" >在 VC 2018 下编译 eXosip</a>
                                 </h1>
                             </header>
@@ -228,28 +252,6 @@
                     
 		    			
                     
-		    			
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://www.z4none.me/post/2015/BLE-data-transfer/" title="蓝牙 4.0 数据传输" >蓝牙 4.0 数据传输</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2015年10月21日
-                            </date>
-                            
-                            <div class="post-content">
-                                <p>低功耗蓝牙（BLE）是为低速率应用设计的，比如控制信号、传感器数据、等，但是偶尔会有在 BLE 下使用更高速率的需要。
-理论的 BLE 无线数据传输速率是 1Mb/s，但是这是两个设备间物理层的传输速率，没有考虑到协议开销。
-实际上的最高速率接近 10kB/s 并且和设备相关，下面进行解释。</p> ...
-                            </div>                            
-                            <p class="readmore">
-	                            <a href="https://www.z4none.me/post/2015/BLE-data-transfer/">阅读全文</a>
-	                        </p>
-                        </article>
-                    	
-                    
                     
 
 
@@ -302,6 +304,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://www.z4none.me/post/2020/modify-symbol-file/" title="修改 symbol 文件 signature">修改 symbol 文件 signature</a>
+    </li>
+    
+    <li>
         <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/" title="当 FFmpeg 遇见 Imgui">当 FFmpeg 遇见 Imgui</a>
     </li>
     
@@ -335,10 +341,6 @@
     
     <li>
         <a href="https://www.z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
-    </li>
-    
-    <li>
-        <a href="https://www.z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
     </li>
     
 </ul>

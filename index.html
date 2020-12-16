@@ -64,6 +64,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://www.z4none.me/post/2020/modify-symbol-file/" title="修改 symbol 文件 signature" >修改 symbol 文件 signature</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月14日
+                            </date>
+                            
+                            <div class="post-content">
+                                问题 当开发 Windows 桌面应用程序时，我们时常需要对程序的崩溃信息进行分析，Windows 提供了 minidump 机制能将程序崩溃状态保存下来进行分析，前提是需要结合对应版本的 pdb 和 exe 文件。
+比如如下程序：
+// #include &lt;iostream&gt; int main() { std::cout &lt;&lt; &quot;Hello World!\n&quot;; int* p = 0; *p = 0; std::cout &lt;&lt; &quot;Fatal Error\n&quot;; return 0; }  运行时会发生访问异常，配合 MiniDumpWriteDump API 会生成异常发生时的 dmp 文件，配合 exe 和 pdb 文件，再 WinDbg 中即可看到崩溃发生的位置，这对于我们排查问题十分有帮助。
+EXCEPTION_RECORD: (.exr -1) ExceptionAddress: 00007ff7e8b57919 (test_symbol!main+0x0000000000000049) ExceptionCode: c0000005 (Access violation) ExceptionFlags: 00000000 NumberParameters: 2 Parameter[0]: 0000000000000001 Parameter[1]: 0000000000000000 Attempt to write to address 0000000000000000 WRONG_SYMBOLS_TIMESTAMP: 70e69bad WRONG_SYMBOLS_SIZE: 1f5000 FAULTING_MODULE: 00007fff5da90000 ntdll ADDITIONAL_DEBUG_TEXT: You can run '. ...
+                            </div>                            
+                            <p class="readmore">
+	                            <a href="https://www.z4none.me/post/2020/modify-symbol-file/">阅读全文</a>
+	                        </p>
+                        </article>
+                    	
+                    
+		    			
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/" title="当 FFmpeg 遇见 Imgui" >当 FFmpeg 遇见 Imgui</a>
                                 </h1>
                             </header>
@@ -281,30 +304,6 @@ Platforms: GLFW, SDL2, Win32, Glut, OSX.
                         </article>
                     	
                     
-		    			
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://www.z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响" >字序对 bit field 的影响</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2018年4月10日
-                            </date>
-                            
-                            <div class="post-content">
-                                问题 下面是在进行 H264 数据分析时碰到的问题
-H264 nal indecator 是在 00 00 00 01 后面的一字节，其字段内容为： * forbidden_zero_bit(1) * nal_ref_idc(2) * nal_unit_type(5)
-比如对 0x67 / 0b01100111，各字段为： * forbidden_zero_bit = 0 * nal_ref_idc = 0b11 = 3 * nal_unit_type = 0b111 = 7
-常规的提取方式如下：
-uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a &amp; 0b01100000) &gt;&gt; 5; uint8_t type = (a &amp; 0b00011111);  f = 0, nri = 3, type = 7 结果没有问题。 ...
-                            </div>                            
-                            <p class="readmore">
-	                            <a href="https://www.z4none.me/post/2018/endian-and-bit-field/">阅读全文</a>
-	                        </p>
-                        </article>
-                    	
-                    
                     
 
 
@@ -353,6 +352,10 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
 <ul class="widget-list">
     
     <li>
+        <a href="https://www.z4none.me/post/2020/modify-symbol-file/" title="修改 symbol 文件 signature">修改 symbol 文件 signature</a>
+    </li>
+    
+    <li>
         <a href="https://www.z4none.me/post/2020/ffmpeg-meet-imgui/" title="当 FFmpeg 遇见 Imgui">当 FFmpeg 遇见 Imgui</a>
     </li>
     
@@ -386,10 +389,6 @@ uint8_t a = 0x67; uint8_t f = (a &amp; 0b10000000) &gt;&gt; 7; uint8_t nri = (a 
     
     <li>
         <a href="https://www.z4none.me/post/2018/vagrant-ssh-permission-denied/" title="解决 Vagrant ssh 失败的问题">解决 Vagrant ssh 失败的问题</a>
-    </li>
-    
-    <li>
-        <a href="https://www.z4none.me/post/2018/endian-and-bit-field/" title="字序对 bit field 的影响">字序对 bit field 的影响</a>
     </li>
     
 </ul>

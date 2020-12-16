@@ -6,10 +6,22 @@
     <description>Recent content in Posts on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 31 May 2020 10:00:55 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 14 Dec 2020 22:56:17 +0800</lastBuildDate>
     
 	<atom:link href="https://www.z4none.me/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>修改 symbol 文件 signature</title>
+      <link>https://www.z4none.me/post/2020/modify-symbol-file/</link>
+      <pubDate>Mon, 14 Dec 2020 22:56:17 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/post/2020/modify-symbol-file/</guid>
+      <description>问题 当开发 Windows 桌面应用程序时，我们时常需要对程序的崩溃信息进行分析，Windows 提供了 minidump 机制能将程序崩溃状态保存下来进行分析，前提是需要结合对应版本的 pdb 和 exe 文件。
+比如如下程序：
+// #include &amp;lt;iostream&amp;gt; int main() { std::cout &amp;lt;&amp;lt; &amp;quot;Hello World!\n&amp;quot;; int* p = 0; *p = 0; std::cout &amp;lt;&amp;lt; &amp;quot;Fatal Error\n&amp;quot;; return 0; }  运行时会发生访问异常，配合 MiniDumpWriteDump API 会生成异常发生时的 dmp 文件，配合 exe 和 pdb 文件，再 WinDbg 中即可看到崩溃发生的位置，这对于我们排查问题十分有帮助。
+EXCEPTION_RECORD: (.exr -1) ExceptionAddress: 00007ff7e8b57919 (test_symbol!main+0x0000000000000049) ExceptionCode: c0000005 (Access violation) ExceptionFlags: 00000000 NumberParameters: 2 Parameter[0]: 0000000000000001 Parameter[1]: 0000000000000000 Attempt to write to address 0000000000000000 WRONG_SYMBOLS_TIMESTAMP: 70e69bad WRONG_SYMBOLS_SIZE: 1f5000 FAULTING_MODULE: 00007fff5da90000 ntdll ADDITIONAL_DEBUG_TEXT: You can run &#39;.</description>
+    </item>
     
     <item>
       <title>当 FFmpeg 遇见 Imgui</title>
