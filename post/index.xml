@@ -6,10 +6,27 @@
     <description>Recent content in Posts on zi-blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 14 Dec 2020 22:56:17 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 17 Dec 2020 22:36:17 +0800</lastBuildDate>
     
 	<atom:link href="https://www.z4none.me/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>如何设置 pyQT5 程序图标</title>
+      <link>https://www.z4none.me/post/2020/pyqt-app-icon/</link>
+      <pubDate>Thu, 17 Dec 2020 22:36:17 +0800</pubDate>
+      
+      <guid>https://www.z4none.me/post/2020/pyqt-app-icon/</guid>
+      <description>&lt;p&gt;为了自定义 pyQT5 项目图标, 有三处需要替换，分别为：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;窗口图标&lt;/li&gt;
+&lt;li&gt;任务栏图标&lt;/li&gt;
+&lt;li&gt;应用程序图标&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下面分别进行介绍。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>修改 symbol 文件 signature</title>
