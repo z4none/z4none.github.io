@@ -278,7 +278,16 @@ SYMSRV:  RESULT: 0x80190194
 SYMSRV:  BYINDEX: 0xB
 </code></pre>
 
-<p>然后通过 ChkMatch.exe 工具得到新编译的 exe 和 pdb 的 Timestamp 和 Signature，通过 Hex Editor 对新的 exe 和 pdb 中的 Timestamp 的 Signature 值进行替换，再通过 Synstore 工具进行备份。</p>
+<p>ChkMatch.exe 是一个 Debug Info 分析工具 <a href="http://www.debuginfo.com/tools/chkmatch.html">http://www.debuginfo.com/tools/chkmatch.html</a></p>
+
+<p>通过 ChkMatch.exe 工具可以得到新编译的 exe 和 pdb 的 Timestamp 和 Signature，</p>
+
+<p>注意如果 Signature: {8b4b1010-1862-4691-b6f1-7d012432902e}， 对应的二进制数据顺序为：</p>
+
+<pre><code>10 10 4b 8b 62 18 91 46 b6 f1 7d 01 24 32 90 2e
+</code></pre>
+
+<p>用 Hex Editor 对新的 exe 和 pdb 中的 Timestamp 的 Signature 值进行替换，再通过 Synstore 工具进行备份。</p>
 
                         </div>
 
